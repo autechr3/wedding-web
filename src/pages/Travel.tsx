@@ -7,7 +7,7 @@ export default function Travel() {
   return (
     <div data-testid="page-travel" className="max-w-2xl mx-auto px-5 py-10">
       <div className="text-center mb-8">
-        <div className="font-crest text-[10px] tracking-[0.3em] uppercase text-gold-soft mb-2">Travel</div>
+        <div className="font-crest text-[10px] tracking-[0.3em] uppercase text-gold-soft mb-2">{t('travel.kicker')}</div>
         <h2 className="font-serif text-3xl text-cream">{t('travel.title')}</h2>
         <p className="text-cream/80 text-sm mt-3 leading-relaxed">{t('travel.intro')}</p>
       </div>

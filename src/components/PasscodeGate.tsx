@@ -13,7 +13,8 @@ export function PasscodeGate({ children }: { children: ReactNode }) {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (value.trim() === import.meta.env.VITE_SITE_PASSCODE) {
+    const expected = import.meta.env.VITE_SITE_PASSCODE;
+    if (expected && value.trim() === expected) {
       localStorage.setItem(UNLOCK_KEY, '1');
       setUnlocked(true);
     } else { setError(true); }

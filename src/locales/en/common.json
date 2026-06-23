@@ -11,6 +11,7 @@
   "passcode": { "prompt": "Please enter the passcode from your invitation", "placeholder": "Passcode", "submit": "Enter", "error": "That passcode isn't right — check your invitation." },
   "langPick": { "title": "Choose your language", "en": "English", "fa": "فارسی" },
   "travel": {
+    "kicker": "Travel",
     "title": "Travel & Stay",
     "intro": "Fly into Dalaman Airport (DLM). Transfers to the resort can be arranged, and guests staying off-resort may visit via a day pass.",
     "hotelsTitle": "Where to Stay",
