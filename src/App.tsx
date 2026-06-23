@@ -5,7 +5,6 @@ import { Layout } from './components/Layout';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import Travel from './pages/Travel';
-import Faq from './pages/Faq';
 import Rsvp from './pages/Rsvp';
 
 export default function App() {
@@ -18,7 +17,6 @@ export default function App() {
               <Route index element={<Home />} />
               <Route path="events" element={<Events />} />
               <Route path="travel" element={<Travel />} />
-              <Route path="faq" element={<Faq />} />
               <Route path="rsvp" element={<Rsvp />} />
             </Route>
           </Routes>

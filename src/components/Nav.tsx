@@ -7,7 +7,7 @@ export function Nav() {
   const { locale, setLocale } = useLocale();
   const links: [string, string][] = [
     ['/', t('nav.home')], ['/events', t('nav.events')],
-    ['/travel', t('nav.travel')], ['/faq', t('nav.faq')], ['/rsvp', t('nav.rsvp')],
+    ['/travel', t('nav.travel')], ['/rsvp', t('nav.rsvp')],
   ];
   return (
     <nav className="sticky top-0 z-20 flex items-center justify-between bg-cobalt-deep/95 px-4 py-3 backdrop-blur border-b border-gold-soft/25">
