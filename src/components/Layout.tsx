@@ -1,11 +1,11 @@
-import { Outlet } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import { Nav } from './Nav';
 
-export function Layout() {
+export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-cobalt text-cream">
       <Nav />
-      <main><Outlet /></main>
+      <main>{children}</main>
     </div>
   );
 }

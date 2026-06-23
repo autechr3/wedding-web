@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import '../i18n';
 import { LocaleProvider } from '../locale/LocaleProvider';
 import HomePage from './HomePage';
@@ -9,7 +8,7 @@ describe('HomePage', () => {
   beforeEach(() => { localStorage.clear(); });
 
   it('renders hero, all three events, hotels, and the rsvp form', () => {
-    render(<MemoryRouter><LocaleProvider><HomePage /></LocaleProvider></MemoryRouter>);
+    render(<LocaleProvider><HomePage /></LocaleProvider>);
     expect(screen.getAllByText('Negar').length).toBeGreaterThan(0);  // hero name
     // titles appear in both the EventSection headings and the RSVP event checkboxes
     expect(screen.getAllByText('Georgia Celebration').length).toBeGreaterThan(0);

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export function Hero() {
@@ -32,12 +31,12 @@ export function Hero() {
           <br />
           {t('hero.venue')}
         </p>
-        <Link
-          to="/rsvp"
+        <a
+          href="#rsvp"
           className="inline-block mt-10 border border-gold text-gold-soft px-12 py-3.5 text-[10px] md:text-[11px] uppercase tracking-[0.35em] hover:bg-gold/10 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:outline-offset-2"
         >
           {t('hero.cta')}
-        </Link>
+        </a>
       </div>
     </section>
   );

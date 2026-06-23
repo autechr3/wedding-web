@@ -5,13 +5,10 @@ import App from './App';
 import { UNLOCK_KEY } from './components/PasscodeGate';
 
 describe('App', () => {
-  beforeEach(() => {
-    localStorage.setItem(UNLOCK_KEY, '1');
-  });
+  beforeEach(() => { localStorage.setItem(UNLOCK_KEY, '1'); });
+  afterEach(() => { localStorage.removeItem(UNLOCK_KEY); });
 
-  afterEach(() => localStorage.removeItem(UNLOCK_KEY));
-
-  it('renders nav and home by default', () => {
+  it('renders nav and the single-page home', () => {
     render(<App />);
     expect(screen.getByText('N · M')).toBeInTheDocument();
     expect(screen.getByTestId('page-home')).toBeInTheDocument();
