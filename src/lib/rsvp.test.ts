@@ -4,7 +4,7 @@ import { validateRsvp, type RsvpDraft } from './rsvp';
 const base: RsvpDraft = {
   fullName: 'Sam Guest', email: 'sam@example.com', partySize: 1,
   guests: [{ name: 'Sam Guest', georgiaMain: 'Filet' }],
-  events: { georgia: true, turkey_rehearsal: false, turkey_wedding: false, boat: false },
+  events: { georgia: true, turkey_rehearsal: false, turkey_wedding: false },
   dietary: '', songRequest: '', note: '',
 };
 
@@ -19,7 +19,7 @@ describe('validateRsvp', () => {
     expect(validateRsvp({ ...base, email: 'nope' }).errors.email).toBeDefined();
   });
   it('requires at least one event answered yes', () => {
-    const r = validateRsvp({ ...base, events: { georgia: false, turkey_rehearsal: false, turkey_wedding: false, boat: false } });
+    const r = validateRsvp({ ...base, events: { georgia: false, turkey_rehearsal: false, turkey_wedding: false } });
     expect(r.errors.events).toBeDefined();
   });
   it('requires a Georgia main course when attending Georgia', () => {

@@ -9,7 +9,7 @@ import { EVENTS } from '../content/events';
 const EMPTY: RsvpDraft = {
   fullName: '', email: '', partySize: 1,
   guests: [{ name: '', georgiaMain: '' }],
-  events: { georgia: false, turkey_rehearsal: false, turkey_wedding: false, boat: false },
+  events: { georgia: false, turkey_rehearsal: false, turkey_wedding: false },
   dietary: '', songRequest: '', note: '',
 };
 

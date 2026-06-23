@@ -1,5 +1,5 @@
 export interface EventInfo {
-  key: 'georgia' | 'turkey_rehearsal' | 'turkey_wedding' | 'boat';
+  key: 'georgia' | 'turkey_rehearsal' | 'turkey_wedding';
   titleEn: string;
   titleFa: string;
   date: string | null;     // ISO Gregorian, null when TBD
@@ -36,13 +36,5 @@ export const EVENTS: EventInfo[] = [
     venueEn: 'Liberty Lykia Resort', venueFa: 'اقامتگاه لیبرتی لیکیا',
     locationEn: 'Ölüdeniz, Türkiye', locationFa: 'اولودنیز، ترکیه',
     rsvpable: true,
-  },
-  {
-    key: 'boat',
-    titleEn: 'Boat Party', titleFa: 'مهمانی قایق',
-    date: '2026-10-07', time: null,
-    venueEn: 'Details coming soon', venueFa: 'جزئیات به‌زودی',
-    locationEn: 'Türkiye', locationFa: 'ترکیه',
-    rsvpable: true, tbd: true,
   },
 ];

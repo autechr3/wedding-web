@@ -1,4 +1,4 @@
-export type EventKey = 'georgia' | 'turkey_rehearsal' | 'turkey_wedding' | 'boat';
+export type EventKey = 'georgia' | 'turkey_rehearsal' | 'turkey_wedding';
 
 export interface GuestDraft { name: string; georgiaMain: string; }
 export interface RsvpDraft {

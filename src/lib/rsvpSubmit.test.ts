@@ -5,7 +5,7 @@ import type { RsvpDraft } from './rsvp';
 const draft: RsvpDraft = {
   fullName: 'Sam Guest', email: 'sam@example.com', partySize: 2,
   guests: [{ name: 'Sam Guest', georgiaMain: 'Filet' }, { name: 'Pat Plus', georgiaMain: 'Salmon' }],
-  events: { georgia: true, turkey_rehearsal: false, turkey_wedding: true, boat: false },
+  events: { georgia: true, turkey_rehearsal: false, turkey_wedding: true },
   dietary: 'none', songRequest: 'Dancing Queen', note: 'Yay',
 };
 
@@ -19,7 +19,7 @@ describe('buildRsvpRows', () => {
     expect(guests[1]).toMatchObject({ guest_name: 'Pat Plus', georgia_main: 'Salmon' });
   });
   it('maps one event row per event with attendance', () => {
-    expect(events).toHaveLength(4);
+    expect(events).toHaveLength(3);
     const wedding = events.find((e) => e.event_key === 'turkey_wedding');
     expect(wedding?.attending).toBe(true);
   });
