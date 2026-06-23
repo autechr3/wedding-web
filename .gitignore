@@ -1,6 +1,7 @@
 # Project-specific
 node_modules/
 .superpowers/
+.claude/
 photos/
 dist/
 dist-ssr/
