@@ -32,3 +32,6 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+# Browser-tool screenshot artifacts (stray captures at repo root)
+.playwright-mcp/
+/*.png
