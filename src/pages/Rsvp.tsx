@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocale } from '../locale/useLocale';
 import { validateRsvp, type RsvpDraft, type EventKey } from '../lib/rsvp';
 import { submitRsvp } from '../lib/rsvpSubmit';
@@ -16,6 +17,7 @@ const INPUT =
   'mt-1 w-full bg-transparent border border-gold-soft/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold-soft transition-colors';
 
 export default function Rsvp() {
+  const { t } = useTranslation();
   const { locale } = useLocale();
   const [draft, setDraft] = useState<RsvpDraft>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -47,9 +49,9 @@ export default function Rsvp() {
   if (status === 'done') {
     return (
       <div data-testid="page-rsvp" className="max-w-xl mx-auto px-5 py-16 text-center text-cream">
-        <h2 className="font-serif text-3xl text-gold-soft">Thank you!</h2>
+        <h2 className="font-serif text-3xl text-gold-soft">{t('rsvp.thankYou')}</h2>
         <p className="text-cream/80 mt-4 leading-relaxed">
-          Your RSVP has been received. We can&rsquo;t wait to celebrate with you.
+          {t('rsvp.thankYouBody')}
         </p>
       </div>
     );
@@ -62,10 +64,10 @@ export default function Rsvp() {
       noValidate
       className="max-w-xl mx-auto px-5 py-12 space-y-6 text-cream text-start"
     >
-      <h2 className="font-serif text-3xl text-center text-gold-soft">RSVP</h2>
+      <h2 className="font-serif text-3xl text-center text-gold-soft">{t('rsvp.title')}</h2>
 
       <label className="block text-sm tracking-wide">
-        Full name
+        {t('rsvp.fullName')}
         <input
           className={INPUT}
           value={draft.fullName}
@@ -75,7 +77,7 @@ export default function Rsvp() {
       {errors.fullName && <p className="text-gold-soft text-sm" role="alert">{errors.fullName}</p>}
 
       <label className="block text-sm tracking-wide">
-        Email
+        {t('rsvp.email')}
         <input
           type="email"
           className={INPUT}
@@ -86,7 +88,7 @@ export default function Rsvp() {
       {errors.email && <p className="text-gold-soft text-sm" role="alert">{errors.email}</p>}
 
       <label className="block text-sm tracking-wide">
-        Party size
+        {t('rsvp.partySize')}
         <input
           type="number"
           min={1}
@@ -98,7 +100,7 @@ export default function Rsvp() {
       </label>
 
       <fieldset className="border border-gold-soft/30 p-4">
-        <legend className="px-2 font-serif text-gold-soft">Which events will you attend?</legend>
+        <legend className="px-2 font-serif text-gold-soft">{t('rsvp.eventsLegend')}</legend>
         {EVENTS.map((ev) => (
           <label key={ev.key} className="flex items-center gap-3 py-1.5 cursor-pointer">
             <input
@@ -115,23 +117,23 @@ export default function Rsvp() {
 
       {draft.events.georgia && (
         <fieldset className="border border-gold-soft/30 p-4 space-y-3">
-          <legend className="px-2 font-serif text-gold-soft">Georgia dinner — main course per guest</legend>
+          <legend className="px-2 font-serif text-gold-soft">{t('rsvp.georgiaLegend')}</legend>
           {draft.guests.map((g, i) => (
             <div key={i} className="flex flex-col sm:flex-row gap-2">
               <input
-                aria-label={`Guest ${i + 1} name`}
-                placeholder={`Guest ${i + 1} name`}
+                aria-label={t('rsvp.guestName', { n: i + 1 })}
+                placeholder={t('rsvp.guestName', { n: i + 1 })}
                 className={`${INPUT} mt-0 flex-1`}
                 value={g.name}
                 onChange={(e) => setGuest(i, { name: e.target.value })}
               />
               <select
-                aria-label={`Guest ${i + 1} main course`}
+                aria-label={t('rsvp.guestMain', { n: i + 1 })}
                 className="bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors"
                 value={g.georgiaMain}
                 onChange={(e) => setGuest(i, { georgiaMain: e.target.value })}
               >
-                <option value="">Select…</option>
+                <option value="">{t('rsvp.selectPlaceholder')}</option>
                 {GEORGIA_MAINS.map((m) => (
                   <option key={m} value={m}>{m}</option>
                 ))}
@@ -143,7 +145,7 @@ export default function Rsvp() {
       {errors.guests && <p className="text-gold-soft text-sm" role="alert">{errors.guests}</p>}
 
       <label className="block text-sm tracking-wide">
-        Dietary restrictions
+        {t('rsvp.dietary')}
         <input
           className={INPUT}
           value={draft.dietary}
@@ -152,7 +154,7 @@ export default function Rsvp() {
       </label>
 
       <label className="block text-sm tracking-wide">
-        Song request (optional)
+        {t('rsvp.songRequest')}
         <input
           className={INPUT}
           value={draft.songRequest}
@@ -161,7 +163,7 @@ export default function Rsvp() {
       </label>
 
       <label className="block text-sm tracking-wide">
-        Note to the couple (optional)
+        {t('rsvp.note')}
         <textarea
           rows={3}
           className={`${INPUT} resize-y`}
@@ -171,7 +173,7 @@ export default function Rsvp() {
       </label>
 
       {status === 'error' && (
-        <p className="text-gold-soft" role="alert">Something went wrong — please try again.</p>
+        <p className="text-gold-soft" role="alert">{t('rsvp.errorGeneric')}</p>
       )}
 
       <button
@@ -179,7 +181,7 @@ export default function Rsvp() {
         disabled={status === 'sending'}
         className="border border-gold text-gold-soft px-8 py-3 text-xs uppercase tracking-[0.25em] hover:bg-gold/10 transition-colors disabled:opacity-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:outline-offset-2"
       >
-        {status === 'sending' ? 'Sending…' : 'Send RSVP'}
+        {status === 'sending' ? t('rsvp.sending') : t('rsvp.submit')}
       </button>
     </form>
   );
