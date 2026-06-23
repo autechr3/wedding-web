@@ -1,0 +1,12 @@
+{
+  "nav": { "home": "Home", "events": "Events", "travel": "Travel & Stay", "faq": "FAQ", "rsvp": "RSVP" },
+  "hero": {
+    "celebration": "The Wedding Celebration",
+    "and": "&",
+    "date": "Tuesday · October Sixth · 2026",
+    "venue": "Liberty Lykia Resort — Ölüdeniz, Türkiye",
+    "cta": "RSVP"
+  },
+  "passcode": { "prompt": "Please enter the passcode from your invitation", "placeholder": "Passcode", "submit": "Enter", "error": "That passcode isn't right — check your invitation." },
+  "langPick": { "title": "Choose your language", "en": "English", "fa": "فارسی" }
+}
