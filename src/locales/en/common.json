@@ -17,5 +17,34 @@
     "dressTitle": "Dress Code",
     "dress": "Beach Formal — light, colorful, Mediterranean-inspired attire. Please avoid black or very dark colors.",
     "verifyNote": "Hotel details are a starting point — please confirm availability and prices directly."
+  },
+  "events": {
+    "kicker": "Our Itinerary",
+    "title": "Celebrations",
+    "dateComingSoon": "Date coming soon",
+    "moreDetails": "More details to come"
+  },
+  "faq": {
+    "kicker": "Questions",
+    "title": "Frequently Asked"
+  },
+  "rsvp": {
+    "title": "RSVP",
+    "fullName": "Full name",
+    "email": "Email",
+    "partySize": "Party size",
+    "eventsLegend": "Which events will you attend?",
+    "georgiaLegend": "Georgia dinner — main course per guest",
+    "guestName": "Guest {{n}} name",
+    "guestMain": "Guest {{n}} main course",
+    "selectPlaceholder": "Select…",
+    "dietary": "Dietary restrictions",
+    "songRequest": "Song request (optional)",
+    "note": "Note to the couple (optional)",
+    "submit": "Send RSVP",
+    "sending": "Sending…",
+    "thankYou": "Thank you!",
+    "thankYouBody": "Your RSVP has been received. We can’t wait to celebrate with you.",
+    "errorGeneric": "Something went wrong — please try again."
   }
 }

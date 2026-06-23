@@ -1,17 +1,17 @@
+import { useTranslation } from 'react-i18next';
 import { useLocale } from '../locale/useLocale';
 import { formatEventDate } from '../lib/dateFormat';
 import type { EventInfo } from '../content/events';
 
 export function EventCard({ event }: { event: EventInfo }) {
+  const { t } = useTranslation();
   const { locale } = useLocale();
   const title = locale === 'fa' ? event.titleFa : event.titleEn;
   const venue = locale === 'fa' ? event.venueFa : event.venueEn;
   const location = locale === 'fa' ? event.locationFa : event.locationEn;
   const dateLabel = event.date
     ? formatEventDate(event.date, locale)
-    : locale === 'fa'
-      ? 'تاریخ به‌زودی'
-      : 'Date coming soon';
+    : t('events.dateComingSoon');
 
   return (
     <article className="border border-gold-soft/35 bg-white/5 p-6 text-start transition-colors hover:border-gold-soft/60">
@@ -25,7 +25,7 @@ export function EventCard({ event }: { event: EventInfo }) {
       </p>
       {event.tbd && (
         <p className="mt-2 text-xs italic text-gold-soft/80">
-          {locale === 'fa' ? 'جزئیات بیشتر به‌زودی' : 'More details to come'}
+          {t('events.moreDetails')}
         </p>
       )}
     </article>
