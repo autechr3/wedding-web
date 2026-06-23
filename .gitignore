@@ -1,6 +1,7 @@
 # Project-specific
 node_modules/
 .superpowers/
+photos/
 dist/
 dist-ssr/
 .env
