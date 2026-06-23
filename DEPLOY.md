@@ -1,0 +1,39 @@
+# Deploy & DNS Runbook — negarandmatt.com
+
+The site is a Vite + React SPA. Hosting on Vercel; data/email on Supabase + Resend.
+
+## 1. Vercel project
+- Push this repo to GitHub (or run `npx vercel`).
+- Import into Vercel. It auto-detects Vite (build: `npm run build`, output: `dist`).
+- `vercel.json` adds the SPA rewrite so deep links (/rsvp, /events…) work on refresh.
+
+## 2. Environment variables (Vercel → Project → Settings → Environment Variables)
+Set for Production (and Preview if desired):
+- `VITE_SITE_PASSCODE` — the shared passcode guests use (e.g. from the invitation).
+- `VITE_SUPABASE_URL` — from your Supabase project.
+- `VITE_SUPABASE_ANON_KEY` — from your Supabase project.
+(Without the Supabase vars, the RSVP form still works but only logs to the console — the
+graceful stub. Set them to enable real persistence.)
+Redeploy after setting env vars so the build picks them up.
+
+## 3. Custom domain + DNS (negarandmatt.com)
+- Vercel → Project → Settings → Domains → add `negarandmatt.com` and `www.negarandmatt.com`.
+- At your domain registrar's DNS panel, add the records Vercel shows:
+  - Apex `negarandmatt.com`: an A record to Vercel's IP (or ALIAS/ANAME if supported).
+  - `www`: CNAME to `cname.vercel-dns.com`.
+- Vercel provisions HTTPS automatically once DNS resolves.
+
+## 4. Resend (RSVP confirmation email) DNS
+- In Resend, add `negarandmatt.com` and copy the DKIM/SPF/return-path records.
+- Add those records in the SAME registrar DNS panel.
+- Once verified, set the Edge Function `FROM_EMAIL=rsvp@negarandmatt.com` (see
+  `supabase/functions/rsvp-email/README.md`).
+
+## 5. Supabase backend
+- Apply `supabase/schema.sql`, deploy the `rsvp-email` function, and create the INSERT
+  webhook — see `supabase/README.md` and `supabase/functions/rsvp-email/README.md`.
+
+## 6. Final checks (on the live domain)
+- Passcode gate works; both languages (EN + Farsi RTL with Jalali dates) render.
+- Submit a test RSVP → row appears in Supabase → confirmation email arrives.
+- Deep-link refresh on /rsvp etc. returns the app (not a 404) — confirms the rewrite.
