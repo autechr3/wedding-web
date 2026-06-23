@@ -1,4 +1,3 @@
-import { supabase, isSupabaseConfigured } from './supabase';
 import type { RsvpDraft, EventKey } from './rsvp';
 
 export interface RsvpRow { full_name: string; email: string; party_size: number; locale: string; dietary: string; song_request: string; note: string; }
@@ -15,6 +14,10 @@ export function buildRsvpRows(d: RsvpDraft, locale: string): { rsvp: RsvpRow; gu
 
 export async function submitRsvp(d: RsvpDraft, locale: string): Promise<{ error: string | null }> {
   const rows = buildRsvpRows(d, locale);
+
+  // Lazy-load the Supabase client so @supabase/supabase-js is not pulled into
+  // the initial bundle — it is only needed when an RSVP is actually submitted.
+  const { supabase, isSupabaseConfigured } = await import('./supabase');
 
   // Stub path: no Supabase configured (e.g. local dev before backend is wired up).
   if (!isSupabaseConfigured || !supabase) {
