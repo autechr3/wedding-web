@@ -13,7 +13,7 @@ describe('EventSection', () => {
 
   it('renders an event title and formatted date', () => {
     render(<LocaleProvider><EventSection event={wedding} /></LocaleProvider>);
-    expect(screen.getByText('Wedding & Reception')).toBeInTheDocument();
+    expect(screen.getByText(wedding.titleEn)).toBeInTheDocument();
     expect(screen.getByText(/October 6, 2026/)).toBeInTheDocument();
   });
 
