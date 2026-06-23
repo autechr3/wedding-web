@@ -7,6 +7,6 @@
     "venue": "Liberty Lykia Resort — Ölüdeniz, Türkiye",
     "cta": "RSVP"
   },
-  "passcode": { "prompt": "Please use the passcode from your invitation", "placeholder": "Passcode", "submit": "Enter", "error": "That passcode isn't right — check your invitation." },
+  "passcode": { "prompt": "Please enter the passcode from your invitation", "placeholder": "Passcode", "submit": "Enter", "error": "That passcode isn't right — check your invitation." },
   "langPick": { "title": "Choose your language", "en": "English", "fa": "فارسی" }
 }

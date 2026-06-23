@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const UNLOCK_KEY = 'nm-unlocked';
+export const UNLOCK_KEY = 'nm-unlocked';
 
 export function PasscodeGate({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
@@ -24,11 +24,11 @@ export function PasscodeGate({ children }: { children: ReactNode }) {
       <form onSubmit={submit} className="text-center max-w-sm w-full">
         <div className="font-crest tracking-[0.3em] text-gold-soft text-sm mb-6">N · M</div>
         <label htmlFor="pc" className="block font-serif text-xl mb-4">{t('passcode.prompt')}</label>
-        <input id="pc" aria-label="passcode" value={value}
+        <input id="pc" value={value}
           onChange={(e) => { setValue(e.target.value); setError(false); }}
           placeholder={t('passcode.placeholder')}
           className="w-full bg-transparent border border-gold-soft/50 px-4 py-3 text-center tracking-widest focus:outline-none focus:border-gold-soft" />
-        {error && <p className="text-gold-soft text-sm mt-3">{t('passcode.error')}</p>}
+        {error && <p role="alert" className="text-gold-soft text-sm mt-3">{t('passcode.error')}</p>}
         <button type="submit" className="mt-5 border border-gold text-gold-soft px-8 py-3 text-xs uppercase tracking-[0.25em] hover:bg-gold/10">{t('passcode.submit')}</button>
       </form>
     </div>
