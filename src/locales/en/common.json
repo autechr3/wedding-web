@@ -9,5 +9,13 @@
   },
   "photos": { "beachPortrait": "Negar and Matthew on the beach" },
   "passcode": { "prompt": "Please enter the passcode from your invitation", "placeholder": "Passcode", "submit": "Enter", "error": "That passcode isn't right — check your invitation." },
-  "langPick": { "title": "Choose your language", "en": "English", "fa": "فارسی" }
+  "langPick": { "title": "Choose your language", "en": "English", "fa": "فارسی" },
+  "travel": {
+    "title": "Travel & Stay",
+    "intro": "Fly into Dalaman Airport (DLM). Transfers to the resort can be arranged, and guests staying off-resort may visit via a day pass.",
+    "hotelsTitle": "Where to Stay",
+    "dressTitle": "Dress Code",
+    "dress": "Beach Formal — light, colorful, Mediterranean-inspired attire. Please avoid black or very dark colors.",
+    "verifyNote": "Hotel details are a starting point — please confirm availability and prices directly."
+  }
 }
