@@ -5,7 +5,8 @@ The site is a Vite + React SPA. Hosting on Vercel; data/email on Supabase + Rese
 ## 1. Vercel project
 - Push this repo to GitHub (or run `npx vercel`).
 - Import into Vercel. It auto-detects Vite (build: `npm run build`, output: `dist`).
-- `vercel.json` adds the SPA rewrite so deep links (/rsvp, /events…) work on refresh.
+- The site is a single page (no client-side routes), so no SPA fallback/rewrite is needed —
+  Vercel serves `index.html` directly. (The former `vercel.json` rewrite was removed.)
 
 ## 2. Environment variables (Vercel → Project → Settings → Environment Variables)
 Set for Production (and Preview if desired):
@@ -36,4 +37,4 @@ Redeploy after setting env vars so the build picks them up.
 ## 6. Final checks (on the live domain)
 - Passcode gate works; both languages (EN + Farsi RTL with Jalali dates) render.
 - Submit a test RSVP → row appears in Supabase → confirmation email arrives.
-- Deep-link refresh on /rsvp etc. returns the app (not a 404) — confirms the rewrite.
+- The page scrolls through all sections; the hero RSVP button jumps to the RSVP form.
