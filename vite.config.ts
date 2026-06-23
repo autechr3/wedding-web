@@ -9,5 +9,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    env: { VITE_SITE_PASSCODE: 'lykia2026' },
   },
 })
