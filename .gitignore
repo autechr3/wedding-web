@@ -3,6 +3,7 @@ node_modules/
 .superpowers/
 .claude/
 photos/
+!src/assets/photos/
 dist/
 dist-ssr/
 .env
