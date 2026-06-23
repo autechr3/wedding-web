@@ -11,8 +11,9 @@ function applyDir(locale: Locale) {
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const { i18n } = useTranslation();
-  const initial = (localStorage.getItem(STORAGE_KEY) as Locale) || 'en';
-  const [locale, setLocaleState] = useState<Locale>(initial);
+  const [locale, setLocaleState] = useState<Locale>(
+    () => (localStorage.getItem(STORAGE_KEY) as Locale) || 'en',
+  );
 
   useEffect(() => { applyDir(locale); i18n.changeLanguage(locale); }, [locale, i18n]);
 
