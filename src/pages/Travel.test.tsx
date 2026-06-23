@@ -8,7 +8,7 @@ describe('Travel', () => {
   beforeEach(() => { localStorage.clear(); });
   it('lists hotels', () => {
     render(<LocaleProvider><Travel /></LocaleProvider>);
-    expect(screen.getByText(/Liberty Lykia – Adults Only/)).toBeInTheDocument();
-    expect(screen.getByText(/Sundia by Liberty/)).toBeInTheDocument();
+    expect(screen.getByText(/Liberty Lykia Resort/)).toBeInTheDocument();
+    expect(screen.getByText(/Morina Deluxe Hotel/)).toBeInTheDocument();
   });
 });

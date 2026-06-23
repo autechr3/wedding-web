@@ -1,17 +1,29 @@
 export interface Hotel {
   nameEn: string; nameFa: string;
   descEn: string; descFa: string;
-  distanceEn: string; distanceFa: string;
-  tier: '$$$' | '$$$$' | '$$$$$';
+  host?: boolean;
   url: string;
 }
 
-// NOTE: verify availability/details before launch.
+// NOTE: the two non-host hotels are placeholders — verify details/links before launch.
 export const HOTELS: Hotel[] = [
-  { nameEn: 'Liberty Lykia – Adults Only', nameFa: 'لیبرتی لیکیا (بزرگسالان)', descEn: 'Connected adults-only sister property to the main resort.', descFa: 'بخش مخصوص بزرگسالان، متصل به اقامتگاه اصلی.', distanceEn: 'On resort', distanceFa: 'در محل اقامتگاه', tier: '$$$$$', url: 'https://www.libertyhotels.com/' },
-  { nameEn: 'Sundia by Liberty Ölüdeniz', nameFa: 'سوندیا بای لیبرتی', descEn: 'Liberty property with a Michelin-recommended seafront restaurant.', descFa: 'متعلق به مجموعه لیبرتی با رستوران ساحلی.', distanceEn: 'Ölüdeniz', distanceFa: 'اولودنیز', tier: '$$$$', url: 'https://www.libertyhotels.com/' },
-  { nameEn: 'Beyaz Yunus Hotel (Adults Only)', nameFa: 'بیاض یونس', descEn: 'Highly rated adults-only boutique near the beach.', descFa: 'بوتیک‌هتل مخصوص بزرگسالان نزدیک ساحل.', distanceEn: '~1.3 mi from resort', distanceFa: '≈۲ کیلومتر', tier: '$$$$', url: 'https://www.tripadvisor.com/' },
-  { nameEn: 'Ecclesia Boutique Hotel (Adults Only)', nameFa: 'اکلسیا بوتیک', descEn: 'Top-rated adults-only boutique hotel.', descFa: 'بوتیک‌هتل برتر مخصوص بزرگسالان.', distanceEn: '~1.5 mi from resort', distanceFa: '≈۲٫۵ کیلومتر', tier: '$$$$', url: 'https://www.tripadvisor.com/' },
-  { nameEn: 'Belcekum Beach Hotel', nameFa: 'بلجکوم بیچ', descEn: 'Beachfront hotel with a private beach.', descFa: 'هتل ساحلی با ساحل اختصاصی.', distanceEn: '~1.5 mi from resort', distanceFa: '≈۲٫۵ کیلومتر', tier: '$$$', url: 'https://www.tripadvisor.com/' },
-  { nameEn: 'Garcia Resort & Spa', nameFa: 'گارسیا ریزورت و اسپا', descEn: 'Ölüdeniz beachfront resort & spa.', descFa: 'اقامتگاه و اسپای ساحلی اولودنیز.', distanceEn: 'Ölüdeniz', distanceFa: 'اولودنیز', tier: '$$$', url: 'https://www.tripadvisor.com/' },
+  {
+    nameEn: 'Liberty Lykia Resort', nameFa: 'اقامتگاه لیبرتی لیکیا',
+    descEn: 'Our host resort — where the ceremony and reception take place.',
+    descFa: 'اقامتگاه میزبان ما — محل برگزاری مراسم و پذیرایی.',
+    host: true,
+    url: 'https://www.libertyhotels.com/',
+  },
+  {
+    nameEn: 'Morina Deluxe Hotel', nameFa: 'هتل مورینا دلوکس',
+    descEn: 'A nearby option in Ölüdeniz for guests staying off-resort.',
+    descFa: 'گزینه‌ای نزدیک در اولودنیز برای مهمانانی که خارج از اقامتگاه می‌مانند.',
+    url: 'https://www.google.com/search?q=Morina+Deluxe+Hotel+Oludeniz',
+  },
+  {
+    nameEn: 'Hotel Karbel Sun', nameFa: 'هتل کاربل سان',
+    descEn: 'A nearby option in Ölüdeniz for guests staying off-resort.',
+    descFa: 'گزینه‌ای نزدیک در اولودنیز برای مهمانانی که خارج از اقامتگاه می‌مانند.',
+    url: 'https://www.google.com/search?q=Hotel+Karbel+Sun+Oludeniz',
+  },
 ];
