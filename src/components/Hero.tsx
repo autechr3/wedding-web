@@ -12,6 +12,7 @@ export function Hero() {
         sizes="100vw"
         alt="Negar and Matt"
         loading="eager"
+        fetchPriority="high"
         className="absolute inset-0 w-full h-full object-cover object-center"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-cobalt-deep/70 via-cobalt-deep/55 to-cobalt-deep/85" />
