@@ -23,7 +23,9 @@
   },
   "events": {
     "dateComingSoon": "Date coming soon",
-    "moreDetails": "More details to come"
+    "moreDetails": "More details to come",
+    "dress": "Dress:",
+    "kids": "Children are welcome."
   },
   "rsvp": {
     "title": "RSVP",

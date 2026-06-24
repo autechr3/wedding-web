@@ -26,4 +26,13 @@ describe('EventSection', () => {
     render(<LocaleProvider><EventSection event={wedding}><div data-testid="extra" /></EventSection></LocaleProvider>);
     expect(screen.getByTestId('extra')).toBeInTheDocument();
   });
+
+  it('renders dress code, kids-welcome, rsvp-by, and a wedding timeline', () => {
+    render(<LocaleProvider><EventSection event={wedding} /></LocaleProvider>);
+    expect(screen.getByText(/Beach Formal/)).toBeInTheDocument();
+    expect(screen.getByText(/Children are welcome/)).toBeInTheDocument();
+    expect(screen.getByText(/Kindly RSVP by August 1, 2026/)).toBeInTheDocument();
+    expect(screen.getByText(/Ceremony begins/)).toBeInTheDocument();
+    expect(screen.getByText(/your presence is our gift/)).toBeInTheDocument();
+  });
 });
