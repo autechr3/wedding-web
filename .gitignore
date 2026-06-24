@@ -2,6 +2,7 @@
 node_modules/
 .superpowers/
 .claude/
+.serena/
 # Source photos (large originals) are ignored, but the optimized web assets
 # under src/assets/photos/ must stay tracked. The negation below depends on
 # coming AFTER the photos/ line — do not reorder.
