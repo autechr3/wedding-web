@@ -1,39 +1,40 @@
 import { useTranslation } from 'react-i18next';
+import { PHOTOS } from '../assets/photos';
 
 export function Hero() {
   const { t } = useTranslation();
+  const bg = PHOTOS.boardwalk;
   return (
-    <section className="relative overflow-hidden bg-cobalt text-cream text-center px-6 py-24 md:py-32">
-      <div className="pointer-events-none absolute inset-3 md:inset-5 border border-gold-soft/40" />
-      <div className="pointer-events-none absolute inset-4 md:inset-6 border border-gold-soft/15" />
+    <section className="relative overflow-hidden text-cream text-center px-6 py-28 md:py-40 min-h-[88vh] flex items-center justify-center">
+      <img
+        src={bg.w1400}
+        srcSet={`${bg.w800} 800w, ${bg.w1400} 1400w, ${bg.w2000} 2000w`}
+        sizes="100vw"
+        alt="Negar and Matt"
+        loading="eager"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-cobalt-deep/70 via-cobalt-deep/55 to-cobalt-deep/85" />
+      <div className="pointer-events-none absolute inset-3 md:inset-6 border border-gold-soft/50" />
       <div className="relative mx-auto max-w-2xl">
-        <div
-          className="font-crest tracking-[0.45em] text-gold-soft text-xs md:text-sm"
-          aria-label="N · M"
-        >
-          <span aria-hidden="true">N</span>
-          <span aria-hidden="true" className="mx-1.5">·</span>
-          <span aria-hidden="true">M</span>
+        <div className="font-crest tracking-[0.45em] text-gold-soft text-xs md:text-sm" aria-label="N · M">
+          <span aria-hidden="true">N</span><span aria-hidden="true" className="mx-1.5">·</span><span aria-hidden="true">M</span>
         </div>
-        <p className="font-serif text-cream/75 tracking-[0.25em] uppercase text-[11px] md:text-xs mt-5">
-          {t('hero.celebration')}
-        </p>
-        <h1 className="font-script text-cream leading-[0.85] text-7xl md:text-9xl mt-6">
+        <h1 className="font-script text-cream leading-[0.85] text-7xl md:text-9xl mt-6 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
           <span className="block">Negar</span>
-          <span className="block font-script text-gold-soft text-5xl md:text-6xl my-1 md:my-2">
-            {t('hero.and')}
-          </span>
-          <span className="block">Matthew</span>
+          <span className="block font-script text-gold-soft text-5xl md:text-6xl my-1 md:my-2">{t('hero.and')}</span>
+          <span className="block">Matt</span>
         </h1>
-        <div className="mx-auto mt-9 h-px w-20 bg-gold-soft/50" />
-        <p className="font-serif tracking-[0.22em] uppercase text-[11px] md:text-xs text-cream/90 mt-7 leading-loose">
+        <div className="mx-auto mt-9 h-px w-20 bg-gold-soft/60" />
+        <p className="font-serif text-cream/95 text-base md:text-lg mt-7 leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
+          {t('hero.tagline')}
+        </p>
+        <p className="font-serif tracking-[0.22em] uppercase text-[11px] md:text-xs text-cream/90 mt-6">
           {t('hero.date')}
-          <br />
-          {t('hero.venue')}
         </p>
         <a
           href="#rsvp"
-          className="inline-block mt-10 border border-gold text-gold-soft px-12 py-3.5 text-[10px] md:text-[11px] uppercase tracking-[0.35em] hover:bg-gold/10 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:outline-offset-2"
+          className="inline-block mt-9 border border-gold bg-cobalt-deep/30 text-gold-soft px-12 py-3.5 text-[10px] md:text-[11px] uppercase tracking-[0.35em] hover:bg-gold/15 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:outline-offset-2"
         >
           {t('hero.cta')}
         </a>
