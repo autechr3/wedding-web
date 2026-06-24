@@ -3,19 +3,22 @@
 Status after the event-details + hero update. **The entire frontend is built, tested (26 passing),
 and verified working in a browser** — passcode gate, bilingual EN/Farsi with RTL + Jalali
 (Persian solar) dates, and a working RSVP form. The site is a **single long-scroll page**
-(no separate routes): a photo-forward **Hero** ("Negar & Matt" over the boardwalk engagement
-photo) → Our Story → Georgia Celebration → Rehearsal Dinner → photo band → Wedding & Reception
-(with the day-of timeline, travel info + 3 hotels colocated here) → RSVP. Each event shows its
-own dress code, "children welcome", and RSVP-by date. There is no separate FAQ — those facts
-are woven into the relevant sections. The RSVP currently runs in **stub mode** (submissions log
-to the browser console) because Supabase isn't wired up yet — see step 1 below.
+(no separate routes): a photo-forward, minimal **Hero** ("Negar & Matt" + the date over the
+boardwalk engagement photo) → Georgia Celebration → Rehearsal Dinner → a kiss photo band →
+Wedding & Reception (with the day-of timeline, travel info + 3 hotels colocated here) → RSVP.
+Each event shows its own dress code, RSVP-by date, and (where applicable) "children welcome".
+There is no separate Story or FAQ section — those were removed; the facts are woven into the
+events. The RSVP runs in **stub mode** (submissions log to the browser console) until Supabase
+is wired up — see step 1 below.
 
-**Event details now baked in:** Georgia 12:30–3:30 PM, Day Cocktail, RSVP by Sep 9 · Rehearsal
-at **Balbura Italian Restaurant** (Liberty Lykia), 6:00 PM, Beach Cocktail, RSVP by Aug 1 ·
-Wedding Oct 6, 5:30 PM ceremony with full timeline (cocktails 6–7, dinner 7, speeches 8:30,
-dancing 9–12), Beach Formal, **no gifts ("your presence is our gift")**, RSVP by Aug 1. A
-**complimentary day pass** covers off-resort guests for both the rehearsal and the wedding.
-The Georgia RSVP collects **three Mac's Tier 2 courses per guest** (first / entrée / dessert).
+**Event details now baked in:** Georgia **Sept 20, 2026**, 12:30–3:30 PM, Day Cocktail, kids
+welcome, RSVP by Sep 9, with a note that the couple are at the courthouse at noon and will see
+guests right after · Rehearsal at **Balbura Italian Restaurant** (Liberty Lykia), Oct 5, 6:00 PM,
+Beach Cocktail, RSVP by Aug 1 · Wedding Oct 6, timeline (ceremony 5:30, cocktails 6–7, dinner 7,
+**dancing & party 9–12** — no speeches line), Beach Formal, kids welcome, **no gifts ("your
+presence is our gift")**, RSVP by Aug 1. A **complimentary day pass** covers off-resort guests
+for both the rehearsal and the wedding. The Georgia RSVP collects **three Mac's Tier 2 courses
+per guest** (first / entrée / dessert).
 
 Run it locally: `npm install` then `npm run dev`, open the URL, enter the passcode
 (`lykia2026` in `.env.local`, change before launch). Toggle the 🇺🇸/🇮🇷 flags top-right.
@@ -45,7 +48,7 @@ These are the **minimum-to-launch** gaps from `docs/content-checklist.md`. The s
 intentional without them (graceful "coming soon" states), but fill them when known:
 
 - [ ] **Shared passcode** value (set `VITE_SITE_PASSCODE`; tell guests on the invitation).
-- [ ] **Georgia exact date** — `src/content/events.ts`, georgia event `date` (currently null → "Date coming soon"). The time (12:30–3:30 PM) and RSVP-by (Sep 9) are set.
+- [ ] **Confirm the Georgia date** — set to **September 20, 2026** (12:30–3:30 PM, RSVP by Sep 9) in `src/content/events.ts`. Verify it's right.
 - [ ] **Confirm Mac's Tier 2 selections** — the 3-course dropdowns use Caesar/Seasonal Salad/Seasonal Soup, 8oz Filet/Crispy Chicken/Pan-Seared Salmon, NY Cheesecake/Chocolate Mousse (`src/content/georgiaMenu.ts`). Verify "Seasonal Salad/Soup" specifics with Mac's.
 - [ ] **Who's invited to which events** — guests self-select on the RSVP form; confirm that's acceptable.
 - [ ] **A contact method** for guest questions — not yet on the site; consider adding to the Story or footer.
@@ -89,8 +92,10 @@ The Farsi is coherent and complete, but a few authored strings are worth a nativ
   `docs/content-checklist.md`.
 - The boat party (the day after) was dropped from the page — re-add to `src/content/events.ts`
   + the RSVP `EventKey` if you want it back.
-- A photo gallery (5 optimized engagement photos exist; the hero + 2 bands use 3 of them —
-  102 beach, 47 courtyard, 77 boardwalk; 110 embrace + 27 archway are indexed but spare).
+- A photo gallery. 5 optimized engagement photos are indexed in `src/assets/photos/index.ts`;
+  the page currently uses 2 — **77 boardwalk** (hero) and **47 courtyard/kiss** (the band between
+  the rehearsal and wedding, framed to show both faces). **102 beach, 110 embrace, 27 archway**
+  are indexed but spare — drop any into a `<PhotoBand>` if you want more photos on the page.
 - Localizing the RSVP **validation** error strings + the menu item names (currently English).
 
 ---
