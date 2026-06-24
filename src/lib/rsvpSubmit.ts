@@ -25,9 +25,13 @@ export async function submitRsvp(d: RsvpDraft, locale: string): Promise<{ error:
     return { error: null };
   }
 
-  const { data, error } = await supabase.from('rsvps').insert(rows.rsvp).select('id').single();
-  if (error || !data) return { error: error?.message ?? 'Insert failed' };
-  const id = (data as { id: string }).id;
+  // Generate the id client-side rather than using INSERT ... RETURNING. The anon
+  // RLS policy grants INSERT only (no SELECT) so guests can't read RSVPs back —
+  // and a RETURNING clause (what `.select()` adds) is a read, so RLS rejects it.
+  // Minting the uuid here lets us link the child rows without reading anything.
+  const id = crypto.randomUUID();
+  const { error } = await supabase.from('rsvps').insert({ ...rows.rsvp, id });
+  if (error) return { error: error.message };
   const { error: gErr } = await supabase.from('rsvp_guests').insert(rows.guests.map((g) => ({ ...g, rsvp_id: id })));
   if (gErr) return { error: gErr.message };
   const { error: eErr } = await supabase.from('rsvp_events').insert(rows.events.map((e) => ({ ...e, rsvp_id: id })));

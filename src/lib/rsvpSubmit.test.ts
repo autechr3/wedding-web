@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { buildRsvpRows } from './rsvpSubmit';
 import type { RsvpDraft } from './rsvp';
 
@@ -25,5 +25,50 @@ describe('buildRsvpRows', () => {
     expect(events).toHaveLength(3);
     const wedding = events.find((e) => e.event_key === 'turkey_wedding');
     expect(wedding?.attending).toBe(true);
+  });
+});
+
+describe('submitRsvp persistence', () => {
+  afterEach(() => {
+    vi.resetModules();
+    vi.doUnmock('./supabase');
+  });
+
+  it('inserts the parent with a client-generated id and no RETURNING, linking children by that id', async () => {
+    // Records every .from(table).insert(payload) call. insert() resolves to a
+    // plain { error } — it deliberately has NO .select(), so if the code tries
+    // an INSERT ... RETURNING (which anon RLS forbids on these tables) the test
+    // throws "select is not a function".
+    const calls: { table: string; payload: unknown }[] = [];
+    vi.doMock('./supabase', () => ({
+      isSupabaseConfigured: true,
+      supabase: {
+        from(table: string) {
+          return {
+            insert(payload: unknown) {
+              calls.push({ table, payload });
+              return Promise.resolve({ error: null });
+            },
+          };
+        },
+      },
+    }));
+
+    const { submitRsvp } = await import('./rsvpSubmit');
+    const result = await submitRsvp(draft, 'en');
+
+    expect(result.error).toBeNull();
+    expect(calls.map((c) => c.table)).toEqual(['rsvps', 'rsvp_guests', 'rsvp_events']);
+
+    const parent = calls[0].payload as { id: string };
+    expect(parent.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    );
+
+    const guests = calls[1].payload as Array<{ rsvp_id: string }>;
+    expect(guests.every((g) => g.rsvp_id === parent.id)).toBe(true);
+
+    const events = calls[2].payload as Array<{ rsvp_id: string }>;
+    expect(events.every((e) => e.rsvp_id === parent.id)).toBe(true);
   });
 });
