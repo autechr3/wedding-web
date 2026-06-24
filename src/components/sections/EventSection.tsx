@@ -25,17 +25,19 @@ export function EventSection({ event, id, children }: { event: EventInfo; id?: s
       {event.tbd && <p className="text-gold-soft/80 italic text-xs mt-2">{t('events.moreDetails')}</p>}
 
       {schedule && (
-        <ul className="mt-4 space-y-1 text-cream/85 text-sm">
-          {schedule.map((line) => <li key={line}>{line}</li>)}
+        <ul className="mt-4 space-y-1 text-cream/90 text-sm">
+          {schedule.map((line, i) => <li key={i}>{line}</li>)}
         </ul>
       )}
 
-      <div className="mt-4 space-y-1 text-sm">
-        {dress && <div className="flex gap-2"><span className="text-gold-soft">{t('events.dress')}</span><span className="text-cream/80">{dress}</span></div>}
-        {event.kids && <p className="text-cream/80">{t('events.kids')}</p>}
-        {note && <p className="text-cream/90 italic mt-1">{note}</p>}
-        {rsvpBy && <p className="text-gold-soft/90 font-crest text-[11px] tracking-[0.12em] uppercase mt-2">{rsvpBy}</p>}
-      </div>
+      {(dress || event.kids || note || rsvpBy) && (
+        <div className="mt-4 space-y-1 text-sm">
+          {dress && <div className="flex gap-2"><span className="text-gold-soft">{t('events.dress')}</span><span className="text-cream/80">{dress}</span></div>}
+          {event.kids && <p className="text-cream/80">{t('events.kids')}</p>}
+          {note && <p className="text-cream/90 italic mt-1">{note}</p>}
+          {rsvpBy && <p className="text-gold-soft/90 font-crest text-[11px] tracking-[0.12em] uppercase mt-2">{rsvpBy}</p>}
+        </div>
+      )}
 
       {children}
     </section>
