@@ -85,7 +85,12 @@ Deno.serve(async () => {
   const from = Deno.env.get('FROM_EMAIL') ?? 'onboarding@resend.dev';
 
   if (!resendKey || recipients.length === 0) {
-    return Response.json({ error: 'Missing RESEND_API_KEY or DIGEST_RECIPIENTS' }, { status: 500 });
+    return Response.json({
+      error: 'Missing config',
+      RESEND_API_KEY_present: Boolean(resendKey),
+      DIGEST_RECIPIENTS_count: recipients.length,
+      FROM_EMAIL: from,
+    }, { status: 500 });
   }
 
   const supabase = createClient(
