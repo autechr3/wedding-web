@@ -5,7 +5,7 @@ export function Hero() {
   const { t } = useTranslation();
   const bg = PHOTOS.boardwalk;
   return (
-    <section className="relative overflow-hidden text-cream text-center px-6 py-28 md:py-40 min-h-[88vh] flex items-center justify-center">
+    <section className="relative overflow-hidden text-cream text-center px-6 py-24 md:py-32 min-h-[100svh] flex items-center justify-center">
       <img
         src={bg.w1400}
         srcSet={`${bg.w800} 800w, ${bg.w1400} 1400w, ${bg.w2000} 2000w`}
