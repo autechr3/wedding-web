@@ -1,0 +1,46 @@
+name: CI
+
+# Runs the quality gate (lint + tests + production build) on every push to main
+# and every pull request targeting main. This does NOT deploy — Vercel's Git
+# integration owns deploys (production on push to main, preview per PR). A red
+# check here surfaces breakage before the Vercel deploy matters.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# If new commits land while a run is in progress, cancel the stale run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Lint, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      # `npm run build` is `tsc -b && vite build`, so this also type-checks.
+      # No env vars needed: this CI artifact is throwaway; Vercel builds the
+      # real, env-injected bundle.
+      - name: Build
+        run: npm run build
