@@ -24,15 +24,18 @@ Redeploy after setting env vars so the build picks them up.
   - `www`: CNAME to `cname.vercel-dns.com`.
 - Vercel provisions HTTPS automatically once DNS resolves.
 
-## 4. Resend (RSVP confirmation email) DNS
+## 4. Resend (daily RSVP digest email) DNS
 - In Resend, add `negarandmatt.com` and copy the DKIM/SPF/return-path records.
-- Add those records in the SAME registrar DNS panel.
+- Add those records in the SAME registrar DNS panel (they use a `send` subdomain /
+  DKIM selector, so they don't disturb the apex Vercel records or `eforward` MX).
 - Once verified, set the Edge Function `FROM_EMAIL=rsvp@negarandmatt.com` (see
-  `supabase/functions/rsvp-email/README.md`).
+  `supabase/functions/rsvp-digest/README.md`).
 
 ## 5. Supabase backend
-- Apply `supabase/schema.sql`, deploy the `rsvp-email` function, and create the INSERT
-  webhook — see `supabase/README.md` and `supabase/functions/rsvp-email/README.md`.
+- `supabase/schema.sql` is applied. A **daily 5 PM ET digest** of all RSVPs emails
+  the couple via Resend — the `rsvp-digest` function is deployed and scheduled with
+  Supabase Cron (no per-RSVP emails). Set its secrets per
+  `supabase/functions/rsvp-digest/README.md`.
 
 ## 6. Final checks (on the live domain)
 - Passcode gate works; both languages (EN + Farsi RTL with Jalali dates) render.

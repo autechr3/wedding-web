@@ -21,9 +21,10 @@ real persistence + email:
   ```
 - Restart `npm run dev`. `isSupabaseConfigured` flips true and real inserts happen.
 
-## 4. Email confirmation
-- See `functions/rsvp-email/` (Edge Function) and the webhook setup notes for emailing
-  the couple on each new RSVP via Resend.
+## 4. Email — daily digest
+- See `functions/rsvp-digest/` — a daily 5 PM ET summary of every RSVP (parties,
+  guests, meal choices) emailed to the couple via Resend. The function is deployed
+  and scheduled via Supabase Cron; set its secrets to enable sending.
 
 ## Security note
 RLS grants anon INSERT only (no read). The shared passcode on the site is soft privacy,
