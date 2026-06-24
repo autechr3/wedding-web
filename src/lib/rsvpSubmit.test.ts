@@ -4,7 +4,10 @@ import type { RsvpDraft } from './rsvp';
 
 const draft: RsvpDraft = {
   fullName: 'Sam Guest', email: 'sam@example.com', partySize: 2,
-  guests: [{ name: 'Sam Guest', georgiaMain: 'Filet' }, { name: 'Pat Plus', georgiaMain: 'Salmon' }],
+  guests: [
+    { name: 'Sam Guest', georgiaFirst: 'Caesar Salad', georgiaEntree: '8oz Filet', georgiaDessert: 'Chocolate Mousse' },
+    { name: 'Pat Plus', georgiaFirst: 'Seasonal Salad', georgiaEntree: 'Pan-Seared Salmon', georgiaDessert: 'NY Style Cheesecake' },
+  ],
   events: { georgia: true, turkey_rehearsal: false, turkey_wedding: true },
   dietary: 'none', songRequest: 'Dancing Queen', note: 'Yay',
 };
@@ -16,7 +19,7 @@ describe('buildRsvpRows', () => {
   });
   it('maps one guest row per guest', () => {
     expect(guests).toHaveLength(2);
-    expect(guests[1]).toMatchObject({ guest_name: 'Pat Plus', georgia_main: 'Salmon' });
+    expect(guests[1]).toMatchObject({ guest_name: 'Pat Plus', georgia_first: 'Seasonal Salad', georgia_entree: 'Pan-Seared Salmon', georgia_dessert: 'NY Style Cheesecake' });
   });
   it('maps one event row per event with attendance', () => {
     expect(events).toHaveLength(3);

@@ -1,13 +1,13 @@
 import type { RsvpDraft, EventKey } from './rsvp';
 
 export interface RsvpRow { full_name: string; email: string; party_size: number; locale: string; dietary: string; song_request: string; note: string; }
-export interface GuestRow { guest_name: string; georgia_main: string; }
+export interface GuestRow { guest_name: string; georgia_first: string; georgia_entree: string; georgia_dessert: string; }
 export interface EventRow { event_key: EventKey; attending: boolean; }
 
 export function buildRsvpRows(d: RsvpDraft, locale: string): { rsvp: RsvpRow; guests: GuestRow[]; events: EventRow[] } {
   return {
     rsvp: { full_name: d.fullName.trim(), email: d.email.trim(), party_size: d.partySize, locale, dietary: d.dietary, song_request: d.songRequest, note: d.note },
-    guests: d.guests.map((g) => ({ guest_name: g.name.trim(), georgia_main: g.georgiaMain })),
+    guests: d.guests.map((g) => ({ guest_name: g.name.trim(), georgia_first: g.georgiaFirst, georgia_entree: g.georgiaEntree, georgia_dessert: g.georgiaDessert })),
     events: (Object.keys(d.events) as EventKey[]).map((k) => ({ event_key: k, attending: d.events[k] })),
   };
 }

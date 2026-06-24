@@ -18,7 +18,9 @@ create table if not exists rsvp_guests (
   id uuid primary key default gen_random_uuid(),
   rsvp_id uuid not null references rsvps(id) on delete cascade,
   guest_name text,
-  georgia_main text
+  georgia_first text,
+  georgia_entree text,
+  georgia_dessert text
 );
 
 create table if not exists rsvp_events (
