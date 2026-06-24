@@ -16,6 +16,8 @@ const EMPTY: RsvpDraft = {
 const INPUT =
   'mt-1 w-full bg-transparent border border-gold-soft/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold-soft transition-colors';
 
+const COURSE_SELECT = 'flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors';
+
 export function RsvpSection() {
   const { t } = useTranslation();
   const { locale } = useLocale();
@@ -120,7 +122,7 @@ export function RsvpSection() {
         <fieldset className="border border-gold-soft/30 p-4 space-y-3">
           <legend className="px-2 font-serif text-gold-soft">{t('rsvp.georgiaLegend')}</legend>
           {draft.guests.map((g, i) => (
-            <div key={i} className="flex flex-col gap-2 border-b border-gold-soft/15 pb-3">
+            <div key={i} className="flex flex-col gap-2 border-b border-gold-soft/15 pb-3 last:border-b-0">
               <input
                 aria-label={t('rsvp.guestName', { n: i + 1 })}
                 placeholder={t('rsvp.guestName', { n: i + 1 })}
@@ -129,15 +131,15 @@ export function RsvpSection() {
                 onChange={(e) => setGuest(i, { name: e.target.value })}
               />
               <div className="flex flex-col sm:flex-row gap-2">
-                <select aria-label={t('rsvp.guestFirst', { n: i + 1 })} className="flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors" value={g.georgiaFirst} onChange={(e) => setGuest(i, { georgiaFirst: e.target.value })}>
+                <select aria-label={t('rsvp.guestFirst', { n: i + 1 })} className={COURSE_SELECT} value={g.georgiaFirst} onChange={(e) => setGuest(i, { georgiaFirst: e.target.value })}>
                   <option value="">{t('rsvp.firstCourse')}</option>
                   {GEORGIA_FIRST.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
-                <select aria-label={t('rsvp.guestEntree', { n: i + 1 })} className="flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors" value={g.georgiaEntree} onChange={(e) => setGuest(i, { georgiaEntree: e.target.value })}>
+                <select aria-label={t('rsvp.guestEntree', { n: i + 1 })} className={COURSE_SELECT} value={g.georgiaEntree} onChange={(e) => setGuest(i, { georgiaEntree: e.target.value })}>
                   <option value="">{t('rsvp.entree')}</option>
                   {GEORGIA_ENTREE.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
-                <select aria-label={t('rsvp.guestDessert', { n: i + 1 })} className="flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors" value={g.georgiaDessert} onChange={(e) => setGuest(i, { georgiaDessert: e.target.value })}>
+                <select aria-label={t('rsvp.guestDessert', { n: i + 1 })} className={COURSE_SELECT} value={g.georgiaDessert} onChange={(e) => setGuest(i, { georgiaDessert: e.target.value })}>
                   <option value="">{t('rsvp.dessert')}</option>
                   {GEORGIA_DESSERT.map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>

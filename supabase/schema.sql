@@ -14,6 +14,9 @@ create table if not exists rsvps (
   note text
 );
 
+-- NOTE: this schema is drop-and-recreate. The Georgia course columns changed from
+-- a single georgia_main to georgia_first/entree/dessert; an existing database needs
+-- an ALTER TABLE migration (the create-if-not-exists below will NOT add the columns).
 create table if not exists rsvp_guests (
   id uuid primary key default gen_random_uuid(),
   rsvp_id uuid not null references rsvps(id) on delete cascade,
