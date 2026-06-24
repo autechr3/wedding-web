@@ -5,6 +5,8 @@ import { validateRsvp, type RsvpDraft, type EventKey } from '../../lib/rsvp';
 import { submitRsvp } from '../../lib/rsvpSubmit';
 import { GEORGIA_FIRST, GEORGIA_ENTREE, GEORGIA_DESSERT } from '../../content/georgiaMenu';
 import { EVENTS } from '../../content/events';
+import { formatEventDate } from '../../lib/dateFormat';
+import { WarningIcon } from '../WarningIcon';
 
 const EMPTY: RsvpDraft = {
   fullName: '', email: '', partySize: 1,
@@ -14,9 +16,26 @@ const EMPTY: RsvpDraft = {
 };
 
 const INPUT =
-  'mt-1 w-full bg-transparent border border-gold-soft/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold-soft transition-colors';
+  'mt-1 w-full bg-white/5 border border-gold-soft/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold-soft transition-colors';
 
-const COURSE_SELECT = 'min-w-0 flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors';
+const COURSE_SELECT = 'nm-field min-w-0 flex-1 bg-white/5 text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors';
+
+// Error variant of INPUT: warm alert border + ring + faint tint so the field
+// reads as needing attention.
+const INPUT_ERR =
+  'mt-1 w-full bg-alert/5 border border-alert ring-1 ring-alert/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none transition-colors';
+
+// Inline field error: sits tight under the field, aligned to the trailing edge,
+// with a warning icon. Renders nothing when there's no message.
+function FieldError({ msg }: { msg?: string }) {
+  if (!msg) return null;
+  return (
+    <p role="alert" className="mt-1.5 flex items-center justify-end gap-1.5 text-end text-[13px] text-alert">
+      <WarningIcon className="h-3.5 w-3.5 shrink-0" />
+      <span>{msg}</span>
+    </p>
+  );
+}
 
 export function RsvpSection() {
   const { t } = useTranslation();
@@ -72,57 +91,87 @@ export function RsvpSection() {
       <label className="block text-sm tracking-wide">
         {t('rsvp.fullName')}
         <input
-          className={INPUT}
+          className={errors.fullName ? INPUT_ERR : INPUT}
+          aria-invalid={errors.fullName ? true : undefined}
           value={draft.fullName}
           onChange={(e) => setDraft({ ...draft, fullName: e.target.value })}
         />
+        <FieldError msg={errors.fullName} />
       </label>
-      {errors.fullName && <p className="text-gold-soft text-sm" role="alert">{errors.fullName}</p>}
 
       <label className="block text-sm tracking-wide">
         {t('rsvp.email')}
         <input
           type="email"
-          className={INPUT}
+          className={errors.email ? INPUT_ERR : INPUT}
+          aria-invalid={errors.email ? true : undefined}
           value={draft.email}
           onChange={(e) => setDraft({ ...draft, email: e.target.value })}
         />
-      </label>
-      {errors.email && <p className="text-gold-soft text-sm" role="alert">{errors.email}</p>}
-
-      <label className="block text-sm tracking-wide">
-        {t('rsvp.partySize')}
-        <input
-          type="number"
-          min={1}
-          max={8}
-          className={`${INPUT} w-24`}
-          value={draft.partySize}
-          onChange={(e) => setPartySize(Math.max(1, Math.min(8, Number(e.target.value) || 1)))}
-        />
+        <FieldError msg={errors.email} />
       </label>
 
-      <fieldset className="border border-gold-soft/30 p-4">
+      <div className="text-sm tracking-wide">
+        <span className="block">{t('rsvp.partySize')}</span>
+        <div className="mt-1 inline-flex items-stretch border border-gold-soft/40 bg-white/5">
+          <button
+            type="button"
+            aria-label="Decrease party size"
+            onClick={() => setPartySize(Math.max(1, draft.partySize - 1))}
+            disabled={draft.partySize <= 1}
+            className="px-4 text-lg leading-none text-gold-soft transition-colors hover:bg-gold/10 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer disabled:cursor-default focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:-outline-offset-1"
+          >−</button>
+          <input
+            type="number"
+            min={1}
+            max={8}
+            aria-label={t('rsvp.partySize')}
+            className="nm-number w-12 bg-transparent py-2 text-center text-cream border-x border-gold-soft/40 focus:outline-none"
+            value={draft.partySize}
+            onChange={(e) => setPartySize(Math.max(1, Math.min(8, Number(e.target.value) || 1)))}
+          />
+          <button
+            type="button"
+            aria-label="Increase party size"
+            onClick={() => setPartySize(Math.min(8, draft.partySize + 1))}
+            disabled={draft.partySize >= 8}
+            className="px-4 text-lg leading-none text-gold-soft transition-colors hover:bg-gold/10 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer disabled:cursor-default focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:-outline-offset-1"
+          >+</button>
+        </div>
+      </div>
+
+      <div>
+        <fieldset className={`border p-4 ${errors.events ? 'border-alert' : 'border-gold-soft/30'}`}>
         <legend className="px-2 font-serif text-gold-soft">{t('rsvp.eventsLegend')}</legend>
         {EVENTS.map((ev) => (
           <label key={ev.key} className="flex items-center gap-3 py-1.5 cursor-pointer">
             <input
               type="checkbox"
-              className="accent-gold"
+              className="nm-check"
               checked={draft.events[ev.key]}
               onChange={(e) => setEvent(ev.key, e.target.checked)}
             />
-            <span>{locale === 'fa' ? ev.titleFa : ev.titleEn}</span>
+            <span className="flex flex-wrap items-baseline gap-x-2">
+              <span>{locale === 'fa' ? ev.titleFa : ev.titleEn}</span>
+              {ev.date && (
+                <span className="text-[11px] tracking-wide text-cream/55">
+                  {formatEventDate(ev.date, locale)}
+                </span>
+              )}
+            </span>
           </label>
         ))}
-      </fieldset>
-      {errors.events && <p className="text-gold-soft text-sm" role="alert">{errors.events}</p>}
+        </fieldset>
+        <FieldError msg={errors.events} />
+      </div>
 
       {draft.events.georgia && (
-        <fieldset className="border border-gold-soft/30 p-4 space-y-3">
+        <div>
+          <fieldset className={`min-w-0 [min-inline-size:0] border p-4 ${errors.guests ? 'border-alert' : 'border-gold-soft/30'}`}>
           <legend className="px-2 font-serif text-gold-soft">{t('rsvp.georgiaLegend')}</legend>
+          <div className="space-y-6">
           {draft.guests.map((g, i) => (
-            <div key={i} className="flex flex-col gap-2 border-b border-gold-soft/15 pb-3 last:border-b-0">
+            <div key={i} className="flex flex-col gap-2 border-b border-gold-soft/15 pb-6 last:border-b-0 last:pb-0">
               <input
                 aria-label={t('rsvp.guestName', { n: i + 1 })}
                 placeholder={t('rsvp.guestName', { n: i + 1 })}
@@ -146,9 +195,11 @@ export function RsvpSection() {
               </div>
             </div>
           ))}
-        </fieldset>
+          </div>
+          </fieldset>
+          <FieldError msg={errors.guests} />
+        </div>
       )}
-      {errors.guests && <p className="text-gold-soft text-sm" role="alert">{errors.guests}</p>}
 
       <label className="block text-sm tracking-wide">
         {t('rsvp.dietary')}
@@ -179,16 +230,21 @@ export function RsvpSection() {
       </label>
 
       {status === 'error' && (
-        <p className="text-gold-soft" role="alert">{t('rsvp.errorGeneric')}</p>
+        <p role="alert" className="flex items-center justify-center gap-1.5 text-alert text-sm">
+          <WarningIcon className="h-4 w-4 shrink-0" />
+          <span>{t('rsvp.errorGeneric')}</span>
+        </p>
       )}
 
-      <button
-        type="submit"
-        disabled={status === 'sending'}
-        className="border border-gold text-gold-soft px-8 py-3 text-xs uppercase tracking-[0.25em] hover:bg-gold/10 transition-colors disabled:opacity-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:outline-offset-2"
-      >
-        {status === 'sending' ? t('rsvp.sending') : t('rsvp.submit')}
-      </button>
+      <div className="text-center">
+        <button
+          type="submit"
+          disabled={status === 'sending'}
+          className="cursor-pointer border border-gold text-gold-soft px-8 py-3 text-xs uppercase tracking-[0.25em] hover:bg-gold/10 transition-colors disabled:opacity-50 disabled:cursor-default focus-visible:outline focus-visible:outline-1 focus-visible:outline-gold-soft focus-visible:outline-offset-2"
+        >
+          {status === 'sending' ? t('rsvp.sending') : t('rsvp.submit')}
+        </button>
+      </div>
     </form>
   );
 }

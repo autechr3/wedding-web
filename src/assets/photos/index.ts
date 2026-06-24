@@ -13,6 +13,9 @@ import p47_2000 from './LVL040526JC1-47-2000.webp';
 import p77_800 from './LVL040526JC1-77-800.webp';
 import p77_1400 from './LVL040526JC1-77-1400.webp';
 import p77_2000 from './LVL040526JC1-77-2000.webp';
+import kiss_800 from './kiss-800.webp';
+import kiss_1400 from './kiss-1400.webp';
+import kiss_2000 from './kiss-2000.webp';
 
 export interface PhotoSet {
   w800: string;
@@ -26,4 +29,5 @@ export const PHOTOS = {
   archway: { w800: p27_800, w1400: p27_1400, w2000: p27_2000 },
   courtyard: { w800: p47_800, w1400: p47_1400, w2000: p47_2000 },
   boardwalk: { w800: p77_800, w1400: p77_1400, w2000: p77_2000 },
+  kiss: { w800: kiss_800, w1400: kiss_1400, w2000: kiss_2000 },
 } satisfies Record<string, PhotoSet>;

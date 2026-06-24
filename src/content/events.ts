@@ -36,7 +36,7 @@ export const EVENTS: EventInfo[] = [
   {
     key: 'turkey_rehearsal',
     titleEn: 'Rehearsal Dinner', titleFa: 'شام تمرین',
-    date: '2026-10-05', time: '6:00 PM',
+    date: '2026-10-05', time: '7:30 PM',
     venueEn: 'Balbura Italian Restaurant · Liberty Lykia Resort',
     venueFa: 'رستوران ایتالیایی بالبورا · اقامتگاه لیبرتی لیکیا',
     locationEn: 'Ölüdeniz, Türkiye', locationFa: 'اولودنیز، ترکیه',

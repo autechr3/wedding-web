@@ -9,6 +9,7 @@
   --color-gold: #c79a4b;
   --color-gold-soft: #d8b873;
   --color-ink: #1d2240;
+  --color-alert: #e0937e;
 
   --font-script: "Pinyon Script", cursive;
   --font-serif: "Cormorant Garamond", serif;
@@ -19,17 +20,18 @@
 
 :root { color-scheme: light; }
 html { scroll-padding-top: 4rem; scroll-behavior: smooth; }
-body { margin: 0; font-family: var(--font-sans); }
+/* Cobalt body background: never let the browser's default white show through —
+   prevents a white flash on load and any "brightness" behind the entry gate. */
+body { margin: 0; font-family: var(--font-sans); background-color: var(--color-cobalt); }
 [dir="rtl"] body { font-family: var(--font-fa); }
 
-/* Entry reveal: when the passcode gate lifts, the page slides down into view.
-   The page is already mounted behind the gate, so fonts + the hero image are
-   loaded by now — the motion is the only thing that changes. */
-@keyframes nm-reveal {
-  from { opacity: 0; transform: translateY(-1.25rem); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Entry reveal: the dark gate slides down and away, uncovering the already-
+   mounted hero. Pure motion — no opacity fade, so there's no brightening. */
+@keyframes nm-gate-exit {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
 }
-.nm-reveal { animation: nm-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.nm-gate-exit { animation: nm-gate-exit 0.7s cubic-bezier(0.6, 0, 0.3, 1) both; }
 
 /* Soft cross-fade between the gate's language and passcode steps. */
 @keyframes nm-fade-in {
@@ -40,5 +42,43 @@ body { margin: 0; font-family: var(--font-sans); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .nm-reveal, .nm-fade-in { animation: none; }
+  .nm-gate-exit, .nm-fade-in { animation: none; }
 }
+
+/* Themed checkbox: a gold-bordered square on the cobalt background instead of
+   the browser's white box. When checked it fills gold with a soft cream check
+   (the same look the native accent-gold check had when ticked). */
+.nm-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--color-gold-soft) 60%, transparent);
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.nm-check:hover { border-color: var(--color-gold-soft); }
+.nm-check:checked {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f3ede0' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+  background-size: 0.8rem;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.nm-check:focus-visible {
+  outline: 1px solid var(--color-gold-soft);
+  outline-offset: 2px;
+}
+
+/* Hide the native number spinner; the party-size field uses themed -/+ buttons. */
+.nm-number::-webkit-outer-spin-button,
+.nm-number::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.nm-number { -moz-appearance: textfield; appearance: textfield; }
+
+/* Dropdown options stay on a solid, readable dark fill even though the closed
+   select uses the translucent field background. */
+.nm-field option { background-color: var(--color-cobalt-dark); color: var(--color-cream); }

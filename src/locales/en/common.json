@@ -16,7 +16,8 @@
     "dateComingSoon": "Date coming soon",
     "moreDetails": "More details to come",
     "dress": "Dress:",
-    "kids": "Children are welcome."
+    "kids": "Children are welcome.",
+    "sectionTitle": "Celebrations"
   },
   "rsvp": {
     "title": "RSVP",
@@ -32,7 +33,7 @@
     "guestFirst": "Guest {{n}} first course",
     "guestEntree": "Guest {{n}} entrée",
     "guestDessert": "Guest {{n}} dessert",
-    "dietary": "Dietary restrictions",
+    "dietary": "Dietary restrictions (optional)",
     "songRequest": "Song request (optional)",
     "note": "Note to the couple (optional)",
     "submit": "Send RSVP",

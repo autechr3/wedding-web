@@ -55,4 +55,14 @@ describe('PasscodeGate', () => {
     expect(screen.queryByLabelText(/passcode/i)).not.toBeInTheDocument();
     expect(screen.getByTestId('secret')).toBeInTheDocument();
   });
+
+  it('matches the passcode case-insensitively', () => {
+    localStorage.setItem(STORAGE_KEY, 'en');
+    setup();
+    fireEvent.change(screen.getByLabelText(/passcode/i), {
+      target: { value: import.meta.env.VITE_SITE_PASSCODE.toUpperCase() },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /enter/i }));
+    expect(screen.queryByLabelText(/passcode/i)).not.toBeInTheDocument();
+  });
 });

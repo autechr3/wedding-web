@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { HOTELS } from '../../content/hotels';
 import { HotelCard } from '../HotelCard';
+import { Divider } from '../Divider';
 
 export function TravelInfo() {
   const { t } = useTranslation();
@@ -11,8 +12,9 @@ export function TravelInfo() {
         <li>👗 {t('travel.dress')}</li>
         <li>🎟️ {t('travel.dayPass')}</li>
       </ul>
+      <Divider />
       <div>
-        <h4 className="font-serif text-lg text-cream mb-3">{t('travel.whereToStay')}</h4>
+        <h4 className="font-serif text-2xl sm:text-3xl text-gold-soft tracking-wide text-center mb-5">{t('travel.whereToStay')}</h4>
         <div className="space-y-3">
           {HOTELS.map((h) => <HotelCard key={h.nameEn} hotel={h} />)}
         </div>
