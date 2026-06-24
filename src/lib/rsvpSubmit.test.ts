@@ -4,22 +4,14 @@ import type { RsvpDraft } from './rsvp';
 
 const draft: RsvpDraft = {
   fullName: 'Sam Guest', email: 'sam@example.com', partySize: 2,
-  guests: [
-    { name: 'Sam Guest', georgiaFirst: 'Caesar Salad', georgiaEntree: '8oz Filet', georgiaDessert: 'Chocolate Mousse' },
-    { name: 'Pat Plus', georgiaFirst: 'Seasonal Salad', georgiaEntree: 'Pan-Seared Salmon', georgiaDessert: 'NY Style Cheesecake' },
-  ],
   events: { georgia: true, turkey_rehearsal: false, turkey_wedding: true },
-  dietary: 'none', songRequest: 'Dancing Queen', note: 'Yay',
+  songRequest: 'Dancing Queen', note: 'Yay',
 };
 
 describe('buildRsvpRows', () => {
-  const { rsvp, guests, events } = buildRsvpRows(draft, 'en');
+  const { rsvp, events } = buildRsvpRows(draft, 'en');
   it('maps the rsvp row', () => {
-    expect(rsvp).toMatchObject({ full_name: 'Sam Guest', email: 'sam@example.com', party_size: 2, locale: 'en', dietary: 'none', song_request: 'Dancing Queen', note: 'Yay' });
-  });
-  it('maps one guest row per guest', () => {
-    expect(guests).toHaveLength(2);
-    expect(guests[1]).toMatchObject({ guest_name: 'Pat Plus', georgia_first: 'Seasonal Salad', georgia_entree: 'Pan-Seared Salmon', georgia_dessert: 'NY Style Cheesecake' });
+    expect(rsvp).toMatchObject({ full_name: 'Sam Guest', email: 'sam@example.com', party_size: 2, locale: 'en', song_request: 'Dancing Queen', note: 'Yay' });
   });
   it('maps one event row per event with attendance', () => {
     expect(events).toHaveLength(3);
@@ -34,7 +26,7 @@ describe('submitRsvp persistence', () => {
     vi.doUnmock('./supabase');
   });
 
-  it('inserts the parent with a client-generated id and no RETURNING, linking children by that id', async () => {
+  it('inserts the parent with a client-generated id and no RETURNING, linking events by that id', async () => {
     // Records every .from(table).insert(payload) call. insert() resolves to a
     // plain { error } — it deliberately has NO .select(), so if the code tries
     // an INSERT ... RETURNING (which anon RLS forbids on these tables) the test
@@ -58,17 +50,14 @@ describe('submitRsvp persistence', () => {
     const result = await submitRsvp(draft, 'en');
 
     expect(result.error).toBeNull();
-    expect(calls.map((c) => c.table)).toEqual(['rsvps', 'rsvp_guests', 'rsvp_events']);
+    expect(calls.map((c) => c.table)).toEqual(['rsvps', 'rsvp_events']);
 
     const parent = calls[0].payload as { id: string };
     expect(parent.id).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
     );
 
-    const guests = calls[1].payload as Array<{ rsvp_id: string }>;
-    expect(guests.every((g) => g.rsvp_id === parent.id)).toBe(true);
-
-    const events = calls[2].payload as Array<{ rsvp_id: string }>;
+    const events = calls[1].payload as Array<{ rsvp_id: string }>;
     expect(events.every((e) => e.rsvp_id === parent.id)).toBe(true);
   });
 });

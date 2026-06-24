@@ -1,8 +1,8 @@
 // Supabase Edge Function: daily RSVP digest.
 //
-// Triggered on a schedule by Supabase Cron (pg_cron). Reads every RSVP (with
-// each guest's meal choices and event selections) using the service role, then
-// emails one summary to the couple via Resend.
+// Triggered on a schedule by Supabase Cron (pg_cron). Reads every RSVP (with its
+// event selections) using the service role, then emails one summary to the
+// couple via Resend.
 //
 // Required secrets (Edge Functions → Secrets, or `supabase secrets set`):
 //   RESEND_API_KEY      - Resend API key
@@ -21,13 +21,12 @@ const EVENT_NAMES: Record<string, string> = {
   turkey_wedding: 'Wedding & Reception',
 };
 
-interface Guest { guest_name: string | null; georgia_first: string | null; georgia_entree: string | null; georgia_dessert: string | null; }
 interface EventRow { event_key: string; attending: boolean; }
 interface Rsvp {
   id: string; created_at: string; full_name: string; email: string;
-  party_size: number; locale: string; dietary: string | null;
+  party_size: number; locale: string;
   song_request: string | null; note: string | null;
-  rsvp_guests: Guest[]; rsvp_events: EventRow[];
+  rsvp_events: EventRow[];
 }
 
 function esc(v: unknown): string {
@@ -54,14 +53,6 @@ function renderRsvp(r: Rsvp): string {
   const attending = (r.rsvp_events ?? [])
     .filter((e) => e.attending)
     .map((e) => esc(EVENT_NAMES[e.event_key] ?? e.event_key));
-  const goingToGeorgia = (r.rsvp_events ?? []).some((e) => e.event_key === 'georgia' && e.attending);
-
-  const guests = (r.rsvp_guests ?? []).map((g, i) => {
-    const courses = goingToGeorgia && (g.georgia_first || g.georgia_entree || g.georgia_dessert)
-      ? `<div style="color:#555;font-size:13px;margin-left:12px;">Georgia courses: ${[g.georgia_first, g.georgia_entree, g.georgia_dessert].filter(Boolean).map(esc).join(' · ') || '—'}</div>`
-      : '';
-    return `<li style="margin:4px 0;">${esc(g.guest_name) || `Guest ${i + 1}`}${courses}</li>`;
-  }).join('');
 
   return `
     <div style="border:1px solid #e2dcc9;border-radius:6px;padding:14px 16px;margin:14px 0;">
@@ -70,8 +61,6 @@ function renderRsvp(r: Rsvp): string {
       </h3>
       ${row('Email', esc(r.email))}
       ${row('Attending', attending.length ? attending.join(', ') : '<em>none selected</em>')}
-      ${guests ? `<p style="margin:8px 0 2px;"><strong style="color:#2b3667;">Guests:</strong></p><ul style="margin:0 0 6px;padding-left:20px;">${guests}</ul>` : ''}
-      ${row('Dietary', esc(r.dietary))}
       ${row('Song request', esc(r.song_request))}
       ${row('Note', esc(r.note))}
       <p style="margin:6px 0 0;color:#aaa;font-size:12px;">Submitted ${esc(fmtDate(r.created_at))} ET</p>
@@ -100,7 +89,7 @@ Deno.serve(async () => {
 
   const { data, error } = await supabase
     .from('rsvps')
-    .select('id, created_at, full_name, email, party_size, locale, dietary, song_request, note, rsvp_guests(guest_name, georgia_first, georgia_entree, georgia_dessert), rsvp_events(event_key, attending)')
+    .select('id, created_at, full_name, email, party_size, locale, song_request, note, rsvp_events(event_key, attending)')
     .order('created_at', { ascending: true });
 
   if (error) return Response.json({ error: error.message }, { status: 500 });

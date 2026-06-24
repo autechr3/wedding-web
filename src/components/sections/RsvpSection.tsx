@@ -3,22 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { useLocale } from '../../locale/useLocale';
 import { validateRsvp, type RsvpDraft, type EventKey } from '../../lib/rsvp';
 import { submitRsvp } from '../../lib/rsvpSubmit';
-import { GEORGIA_FIRST, GEORGIA_ENTREE, GEORGIA_DESSERT } from '../../content/georgiaMenu';
 import { EVENTS } from '../../content/events';
 import { formatEventDate } from '../../lib/dateFormat';
 import { WarningIcon } from '../WarningIcon';
 
 const EMPTY: RsvpDraft = {
   fullName: '', email: '', partySize: 1,
-  guests: [{ name: '', georgiaFirst: '', georgiaEntree: '', georgiaDessert: '' }],
   events: { georgia: false, turkey_rehearsal: false, turkey_wedding: false },
-  dietary: '', songRequest: '', note: '',
+  songRequest: '', note: '',
 };
 
 const INPUT =
   'mt-1 w-full bg-white/5 border border-gold-soft/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold-soft transition-colors';
-
-const COURSE_SELECT = 'nm-field min-w-0 flex-1 bg-white/5 text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors';
 
 // Error variant of INPUT: warm alert border + ring + faint tint so the field
 // reads as needing attention.
@@ -47,14 +43,8 @@ export function RsvpSection() {
   function setEvent(k: EventKey, v: boolean) {
     setDraft((d) => ({ ...d, events: { ...d.events, [k]: v } }));
   }
-  function setGuest(i: number, patch: Partial<RsvpDraft['guests'][number]>) {
-    setDraft((d) => ({ ...d, guests: d.guests.map((g, idx) => (idx === i ? { ...g, ...patch } : g)) }));
-  }
   function setPartySize(n: number) {
-    setDraft((d) => {
-      const guests = Array.from({ length: n }, (_, i) => d.guests[i] ?? { name: '', georgiaFirst: '', georgiaEntree: '', georgiaDessert: '' });
-      return { ...d, partySize: n, guests };
-    });
+    setDraft((d) => ({ ...d, partySize: n }));
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -142,73 +132,28 @@ export function RsvpSection() {
 
       <div>
         <fieldset className={`border p-4 ${errors.events ? 'border-alert' : 'border-gold-soft/30'}`}>
-        <legend className="px-2 font-serif text-gold-soft">{t('rsvp.eventsLegend')}</legend>
-        {EVENTS.map((ev) => (
-          <label key={ev.key} className="flex items-center gap-3 py-1.5 cursor-pointer">
-            <input
-              type="checkbox"
-              className="nm-check"
-              checked={draft.events[ev.key]}
-              onChange={(e) => setEvent(ev.key, e.target.checked)}
-            />
-            <span className="flex flex-wrap items-baseline gap-x-2">
-              <span>{locale === 'fa' ? ev.titleFa : ev.titleEn}</span>
-              {ev.date && (
-                <span className="text-[11px] tracking-wide text-cream/55">
-                  {formatEventDate(ev.date, locale)}
-                </span>
-              )}
-            </span>
-          </label>
-        ))}
+          <legend className="px-2 font-serif text-gold-soft">{t('rsvp.eventsLegend')}</legend>
+          {EVENTS.map((ev) => (
+            <label key={ev.key} className="flex items-center gap-3 py-1.5 cursor-pointer">
+              <input
+                type="checkbox"
+                className="nm-check"
+                checked={draft.events[ev.key]}
+                onChange={(e) => setEvent(ev.key, e.target.checked)}
+              />
+              <span className="flex flex-wrap items-baseline gap-x-2">
+                <span>{locale === 'fa' ? ev.titleFa : ev.titleEn}</span>
+                {ev.date && (
+                  <span className="text-[11px] tracking-wide text-cream/55">
+                    {formatEventDate(ev.date, locale)}
+                  </span>
+                )}
+              </span>
+            </label>
+          ))}
         </fieldset>
         <FieldError msg={errors.events} />
       </div>
-
-      {draft.events.georgia && (
-        <div>
-          <fieldset className={`min-w-0 [min-inline-size:0] border p-4 ${errors.guests ? 'border-alert' : 'border-gold-soft/30'}`}>
-          <legend className="px-2 font-serif text-gold-soft">{t('rsvp.georgiaLegend')}</legend>
-          <div className="space-y-6">
-          {draft.guests.map((g, i) => (
-            <div key={i} className="flex flex-col gap-2 border-b border-gold-soft/15 pb-6 last:border-b-0 last:pb-0">
-              <input
-                aria-label={t('rsvp.guestName', { n: i + 1 })}
-                placeholder={t('rsvp.guestName', { n: i + 1 })}
-                className={`${INPUT} mt-0`}
-                value={g.name}
-                onChange={(e) => setGuest(i, { name: e.target.value })}
-              />
-              <div className="flex flex-col sm:flex-row gap-2">
-                <select aria-label={t('rsvp.guestFirst', { n: i + 1 })} className={COURSE_SELECT} value={g.georgiaFirst} onChange={(e) => setGuest(i, { georgiaFirst: e.target.value })}>
-                  <option value="">{t('rsvp.firstCourse')}</option>
-                  {GEORGIA_FIRST.map((m) => <option key={m} value={m}>{m}</option>)}
-                </select>
-                <select aria-label={t('rsvp.guestEntree', { n: i + 1 })} className={COURSE_SELECT} value={g.georgiaEntree} onChange={(e) => setGuest(i, { georgiaEntree: e.target.value })}>
-                  <option value="">{t('rsvp.entree')}</option>
-                  {GEORGIA_ENTREE.map((m) => <option key={m} value={m}>{m}</option>)}
-                </select>
-                <select aria-label={t('rsvp.guestDessert', { n: i + 1 })} className={COURSE_SELECT} value={g.georgiaDessert} onChange={(e) => setGuest(i, { georgiaDessert: e.target.value })}>
-                  <option value="">{t('rsvp.dessert')}</option>
-                  {GEORGIA_DESSERT.map((m) => <option key={m} value={m}>{m}</option>)}
-                </select>
-              </div>
-            </div>
-          ))}
-          </div>
-          </fieldset>
-          <FieldError msg={errors.guests} />
-        </div>
-      )}
-
-      <label className="block text-sm tracking-wide">
-        {t('rsvp.dietary')}
-        <input
-          className={INPUT}
-          value={draft.dietary}
-          onChange={(e) => setDraft({ ...draft, dietary: e.target.value })}
-        />
-      </label>
 
       <label className="block text-sm tracking-wide">
         {t('rsvp.songRequest')}
