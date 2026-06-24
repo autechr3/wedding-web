@@ -2,9 +2,10 @@
 //
 // Triggered on a schedule by Supabase Cron (pg_cron). Reads every RSVP (with its
 // event selections) using the service role, then emails one summary to the
-// couple via Resend.
+// couple via Resend. The email has two parts: detailed cards for RSVPs received
+// in the last 24 hours, then a compact attendance table of everyone so far.
 //
-// Required secrets (Edge Functions → Secrets, or `supabase secrets set`):
+// Required secrets (Edge Functions -> Secrets, or `supabase secrets set`):
 //   RESEND_API_KEY      - Resend API key
 //   DIGEST_RECIPIENTS   - comma-separated recipient emails (e.g. "a@x.com,b@y.com")
 // Optional:
@@ -14,57 +15,45 @@
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are injected automatically.
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.48.1';
+import {
+  EVENT_NAMES, EVENT_SHORT, RSVP_SELECT, type Rsvp,
+  esc, fmtDay, renderCard,
+} from '../_shared/render.ts';
 
-const EVENT_NAMES: Record<string, string> = {
-  georgia: 'Georgia Celebration',
-  turkey_rehearsal: 'Rehearsal Dinner',
-  turkey_wedding: 'Wedding & Reception',
-};
+const NEW_WINDOW_MS = 24 * 60 * 60 * 1000;
 
-interface EventRow { event_key: string; attending: boolean; }
-interface Rsvp {
-  id: string; created_at: string; full_name: string; email: string;
-  party_size: number; locale: string;
-  song_request: string | null; note: string | null;
-  rsvp_events: EventRow[];
-}
-
-function esc(v: unknown): string {
-  return String(v ?? '')
-    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-}
-
-function fmtDate(iso: string): string {
-  try {
-    return new Date(iso).toLocaleString('en-US', {
-      timeZone: 'America/New_York', month: 'short', day: 'numeric',
-      hour: 'numeric', minute: '2-digit',
-    });
-  } catch { return iso; }
-}
-
-function row(label: string, value: string): string {
-  if (!value) return '';
-  return `<p style="margin:2px 0;"><strong style="color:#2b3667;">${esc(label)}:</strong> ${value}</p>`;
-}
-
-function renderRsvp(r: Rsvp): string {
-  const attending = (r.rsvp_events ?? [])
-    .filter((e) => e.attending)
-    .map((e) => esc(EVENT_NAMES[e.event_key] ?? e.event_key));
-
+// One <tr> in the compact attendance table: name, party, a check/dash per event,
+// then the day it came in.
+function tableRow(r: Rsvp, zebra: boolean): string {
+  const attending = new Set((r.rsvp_events ?? []).filter((e) => e.attending).map((e) => e.event_key));
+  const cells = Object.keys(EVENT_NAMES).map((k) => {
+    const yes = attending.has(k);
+    return `<td style="padding:6px 8px;text-align:center;color:${yes ? '#2b7a3f' : '#cfcabb'};">${yes ? '&#10003;' : '&middot;'}</td>`;
+  }).join('');
+  const bg = zebra ? 'background:#faf8f1;' : '';
   return `
-    <div style="border:1px solid #e2dcc9;border-radius:6px;padding:14px 16px;margin:14px 0;">
-      <h3 style="margin:0 0 6px;color:#2b3667;font-size:17px;">
-        ${esc(r.full_name)} <span style="font-weight:400;color:#888;font-size:14px;">· party of ${esc(r.party_size)} · ${esc(r.locale)}</span>
-      </h3>
-      ${row('Email', esc(r.email))}
-      ${row('Attending', attending.length ? attending.join(', ') : '<em>none selected</em>')}
-      ${row('Song request', esc(r.song_request))}
-      ${row('Note', esc(r.note))}
-      <p style="margin:6px 0 0;color:#aaa;font-size:12px;">Submitted ${esc(fmtDate(r.created_at))} ET</p>
-    </div>`;
+    <tr style="${bg}">
+      <td style="padding:6px 8px;color:#222;">${esc(r.full_name)}</td>
+      <td style="padding:6px 8px;text-align:center;color:#444;">${esc(r.party_size)}</td>
+      ${cells}
+      <td style="padding:6px 8px;color:#999;white-space:nowrap;">${esc(fmtDay(r.created_at))}</td>
+    </tr>`;
+}
+
+function renderTable(rsvps: Rsvp[]): string {
+  const headCell = (label: string, center = false) =>
+    `<th style="padding:8px;text-align:${center ? 'center' : 'left'};font-weight:600;">${esc(label)}</th>`;
+  const eventHeads = Object.keys(EVENT_NAMES).map((k) => headCell(EVENT_SHORT[k] ?? k, true)).join('');
+  const body = rsvps.map((r, i) => tableRow(r, i % 2 === 1)).join('');
+  return `
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
+      <thead>
+        <tr style="color:#2b3667;border-bottom:2px solid #c79a4b;">
+          ${headCell('Name')}${headCell('Party', true)}${eventHeads}${headCell("RSVP'd")}
+        </tr>
+      </thead>
+      <tbody>${body}</tbody>
+    </table>`;
 }
 
 Deno.serve(async () => {
@@ -89,8 +78,8 @@ Deno.serve(async () => {
 
   const { data, error } = await supabase
     .from('rsvps')
-    .select('id, created_at, full_name, email, party_size, locale, song_request, note, rsvp_events(event_key, attending)')
-    .order('created_at', { ascending: true });
+    .select(RSVP_SELECT)
+    .order('created_at', { ascending: false });
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
@@ -98,6 +87,12 @@ Deno.serve(async () => {
   if (rsvps.length === 0) {
     return Response.json({ ok: true, skipped: 'no RSVPs yet' });
   }
+
+  const cutoff = Date.now() - NEW_WINDOW_MS;
+  const fresh = rsvps.filter((r) => {
+    const t = Date.parse(r.created_at);
+    return Number.isFinite(t) && t >= cutoff;
+  });
 
   const totalParties = rsvps.length;
   const totalGuests = rsvps.reduce((n, r) => n + (r.party_size ?? 0), 0);
@@ -109,17 +104,24 @@ Deno.serve(async () => {
   }
   const eventSummary = Object.entries(EVENT_NAMES)
     .map(([k, name]) => `${esc(name)}: <strong>${eventCounts[k] ?? 0}</strong>`)
-    .join(' &nbsp;·&nbsp; ');
+    .join(' &nbsp;&middot;&nbsp; ');
+
+  const newSection = fresh.length
+    ? `<h3 style="color:#2b3667;margin:18px 0 0;">New in the last 24 hours — ${fresh.length}</h3>
+       ${fresh.map(renderCard).join('')}`
+    : `<p style="color:#777;font-style:italic;margin:18px 0;">No new RSVPs in the last 24 hours.</p>`;
 
   const html = `
-    <div style="font-family:Georgia,'Times New Roman',serif;max-width:640px;margin:0 auto;color:#222;">
+    <div style="font-family:Georgia,'Times New Roman',serif;max-width:680px;margin:0 auto;color:#222;">
       <h2 style="color:#2b3667;border-bottom:2px solid #c79a4b;padding-bottom:8px;">Wedding RSVPs — daily digest</h2>
       <p style="font-size:15px;">
-        <strong>${totalParties}</strong> ${totalParties === 1 ? 'party' : 'parties'} ·
+        <strong>${totalParties}</strong> ${totalParties === 1 ? 'party' : 'parties'} &middot;
         <strong>${totalGuests}</strong> ${totalGuests === 1 ? 'guest' : 'guests'} total
       </p>
       <p style="font-size:14px;color:#444;">Attending by event — ${eventSummary}</p>
-      ${rsvps.map(renderRsvp).join('')}
+      ${newSection}
+      <h3 style="color:#2b3667;margin:24px 0 0;border-top:1px solid #e2dcc9;padding-top:16px;">All RSVPs — ${totalParties}</h3>
+      ${renderTable(rsvps)}
     </div>`;
 
   const res = await fetch('https://api.resend.com/emails', {
@@ -136,5 +138,5 @@ Deno.serve(async () => {
   if (!res.ok) {
     return Response.json({ error: `Resend error: ${await res.text()}` }, { status: 502 });
   }
-  return Response.json({ ok: true, parties: totalParties, guests: totalGuests });
+  return Response.json({ ok: true, parties: totalParties, guests: totalGuests, new: fresh.length });
 });
