@@ -2,16 +2,9 @@
   "hero": {
     "and": "&",
     "date": "Tuesday · October Sixth · 2026",
-    "tagline": "We can't wait to celebrate our big days with you.",
     "cta": "RSVP"
   },
-  "photos": { "beachPortrait": "Negar and Matt on the beach" },
   "passcode": { "prompt": "Please enter the passcode from your invitation", "placeholder": "Passcode", "submit": "Enter", "error": "That passcode isn't right — check your invitation." },
-  "story": {
-    "kicker": "Our Story",
-    "title": "Negar & Matt",
-    "body": "We're so happy you're here. We can't wait to celebrate our big days with you — in Georgia and in Türkiye."
-  },
   "travel": {
     "host": "Host",
     "dress": "Beach Formal — light, colorful, Mediterranean-inspired attire. Please avoid black or very dark colors.",

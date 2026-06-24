@@ -27,10 +27,7 @@ export function Hero() {
           <span className="block">Matt</span>
         </h1>
         <div className="mx-auto mt-9 h-px w-20 bg-gold-soft/60" />
-        <p className="font-serif text-cream/95 text-base md:text-lg mt-7 leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
-          {t('hero.tagline')}
-        </p>
-        <p className="font-serif tracking-[0.22em] uppercase text-[11px] md:text-xs text-cream/90 mt-6">
+        <p className="font-serif tracking-[0.22em] uppercase text-[11px] md:text-xs text-cream/90 mt-7">
           {t('hero.date')}
         </p>
         <a

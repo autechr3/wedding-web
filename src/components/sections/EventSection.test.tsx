@@ -3,10 +3,9 @@ import { render, screen } from '@testing-library/react';
 import '../../i18n';
 import { LocaleProvider } from '../../locale/LocaleProvider';
 import { EventSection } from './EventSection';
-import { EVENTS } from '../../content/events';
+import { EVENTS, type EventInfo } from '../../content/events';
 
 const wedding = EVENTS.find((e) => e.key === 'turkey_wedding')!;
-const georgia = EVENTS.find((e) => e.key === 'georgia')!;
 
 describe('EventSection', () => {
   beforeEach(() => { localStorage.clear(); });
@@ -17,8 +16,9 @@ describe('EventSection', () => {
     expect(screen.getByText(/October 6, 2026/)).toBeInTheDocument();
   });
 
-  it('shows a coming-soon date for a TBD event', () => {
-    render(<LocaleProvider><EventSection event={georgia} /></LocaleProvider>);
+  it('shows a coming-soon date when an event has no date', () => {
+    const tbdEvent: EventInfo = { ...wedding, date: null, scheduleEn: undefined, scheduleFa: undefined };
+    render(<LocaleProvider><EventSection event={tbdEvent} /></LocaleProvider>);
     expect(screen.getByText('Date coming soon')).toBeInTheDocument();
   });
 

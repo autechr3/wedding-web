@@ -1,5 +1,4 @@
 import { Hero } from '../components/Hero';
-import { StorySection } from '../components/sections/StorySection';
 import { EventSection } from '../components/sections/EventSection';
 import { TravelInfo } from '../components/sections/TravelInfo';
 import { RsvpSection } from '../components/sections/RsvpSection';
@@ -14,10 +13,9 @@ export default function HomePage() {
   return (
     <div data-testid="page-home">
       <Hero />
-      <StorySection />
       <EventSection event={georgia} id="georgia" />
       <EventSection event={rehearsal} id="rehearsal" />
-      <PhotoBand photo={PHOTOS.courtyard} alt="Negar and Matt" heightClass="h-64 md:h-80" loading="lazy" />
+      <PhotoBand photo={PHOTOS.courtyard} alt="Negar and Matt" heightClass="h-80 md:h-[28rem]" objectPosition="center 32%" loading="lazy" />
       <EventSection event={wedding} id="wedding">
         <TravelInfo />
       </EventSection>
