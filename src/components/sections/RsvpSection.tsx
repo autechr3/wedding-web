@@ -16,7 +16,7 @@ const EMPTY: RsvpDraft = {
 const INPUT =
   'mt-1 w-full bg-transparent border border-gold-soft/40 px-3 py-2 text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold-soft transition-colors';
 
-const COURSE_SELECT = 'flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors';
+const COURSE_SELECT = 'min-w-0 flex-1 bg-cobalt-deep text-cream border border-gold-soft/40 px-3 py-2 focus:outline-none focus:border-gold-soft transition-colors';
 
 export function RsvpSection() {
   const { t } = useTranslation();
