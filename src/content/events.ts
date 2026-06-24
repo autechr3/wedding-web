@@ -8,7 +8,6 @@ export interface EventInfo {
   venueFa: string;
   locationEn: string;
   locationFa: string;
-  rsvpable: boolean;
   tbd?: boolean;
 }
 
@@ -19,7 +18,7 @@ export const EVENTS: EventInfo[] = [
     date: null, time: '12:00 PM ceremony · 2:00 PM dinner',
     venueEn: "Mac's Chophouse", venueFa: 'مکس چاپ‌هاوس',
     locationEn: 'Marietta, GA', locationFa: 'ماریتا، جورجیا',
-    rsvpable: true, tbd: true,
+    tbd: true,
   },
   {
     key: 'turkey_rehearsal',
@@ -27,7 +26,6 @@ export const EVENTS: EventInfo[] = [
     date: '2026-10-05', time: null,
     venueEn: 'Liberty Lykia Resort', venueFa: 'اقامتگاه لیبرتی لیکیا',
     locationEn: 'Ölüdeniz, Türkiye', locationFa: 'اولودنیز، ترکیه',
-    rsvpable: true,
   },
   {
     key: 'turkey_wedding',
@@ -35,6 +33,5 @@ export const EVENTS: EventInfo[] = [
     date: '2026-10-06', time: '5:30 PM',
     venueEn: 'Liberty Lykia Resort', venueFa: 'اقامتگاه لیبرتی لیکیا',
     locationEn: 'Ölüdeniz, Türkiye', locationFa: 'اولودنیز، ترکیه',
-    rsvpable: true,
   },
 ];
